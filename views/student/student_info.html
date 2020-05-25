@@ -1,0 +1,191 @@
+<div class="row" ng-controller="StudentController" ng-init="init()">
+	<button class="btn btn-primary btn-fab top right fixed" ng-click="OpenModal()">
+		<span class="glyphicon glyphicon-plus"></span>
+	</button>
+	<script type="text/ng-template" id="ModalContent.html">
+		<div class="modal-header">
+			<h3 class="modal-title">Student Information</h3>
+		</div>
+		<div class="modal-body">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>First Name</label>
+						<input class="form-control" ng-model="ModalStudent.first_name"/>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Middle Name</label>
+						<input class="form-control" ng-model="ModalStudent.middle_name"/>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Last Name</label>
+						<input class="form-control" ng-model="ModalStudent.last_name"/>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Suffix</label>
+						<input class="form-control" placeholder="Jr / Sr / III" ng-model="ModalStudent.suffix"/>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Gender</label>
+						<div class="btn-group btn-group-justified">
+							<a class="btn btn-default" ng-click="chooseGender('male')" ng-class="{'btn-primary':ModalStudent.gender==='M'}">Male</a>
+							<a class="btn btn-default" ng-click="chooseGender('female')" ng-class="{'btn-primary':ModalStudent.gender==='F'}">Female</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Department</label>
+						<div class="btn-group btn-group-justified">
+							<div class="btn-group" ng-repeat="Department in Departments"
+												   ng-click="setActiveDepartment(Department)">
+								<button class="btn btn-default" ng-class="{'btn-primary':ModalStudent.department_id===Department.id}">
+									{{Department.id}}
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>User</label>
+						<div class="form-group">
+							<select class="form-control" ng-model="ModalStudent.user_id"
+														 ng-options="user.id as user.username for user in Users | orderBy:'username' ">
+								<option value="">--Select--</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
+						<label>Status</label>
+						<div class="form-group">
+							<select class="form-control" ng-model="ModalStudent.status"
+														 ng-options="status.name for status in Statuses track by status.id">
+								<option value="">--Select--</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-default pull-left" ng-click="cancelModal()">Cancel</button>
+			<button class="btn btn-danger pull-left" ng-click="deleteModal()" ng-show="Mode==='edit'&&!deleting">Archive</button>
+			<button class="btn btn-primary" ng-click="confirmModal()" ng-show="idle">Confirm</button>
+			<button class="btn btn-primary" ng-disabled="!idle" ng-show="!idle">Saving...</button>
+			<button class="btn btn-danger pull-left" ng-disabled="deleting" ng-show="deleting">Deleting...</button>
+		</div>
+	</script>
+	<div class="col-md-12">
+		<div class="list-group">
+			<div class="list-group-item list-group-header">
+				<div class="pull-right"> 
+					<div class="btn-group btn-group-sm">
+						<button class="btn btn-default" ng-show="Students.length">
+							{{FirstItem}} - {{LastItem}} of {{TotalItems}}
+						</button>
+						<button class="btn btn-default" ng-disabled="!PrevPage" ng-click="navigatePage(PrevPage)">
+							<span class="glyphicon glyphicon-chevron-left"></span>
+						</button>
+						<button class="btn btn-default" ng-disabled="!NextPage" ng-click="navigatePage(NextPage)">
+							<span class="glyphicon glyphicon-chevron-right"></span>
+						</button>
+					</div>
+				</div>
+				<label class="clear-fix">Students</label>
+			</div>
+			<div class="list-group-canvas">
+				<div class="list-group-item list-group-header">
+					<ul class="nav nav-pills">
+						<li ng-repeat="Department in Departments"
+							ng-click="setActiveDepartment(Department)"
+							ng-class="{active:ActiveDepartment.id===(Department.id)}">
+							<a>{{Department.id}}</a>
+						</li>
+						<div class="pull-right">
+							<div class="btn-group dropdown" ng-class="{open:OpenFilter}">
+								<button class="btn btn-default" ng-hide="ActiveStatus">
+									Filter Status
+								</button>
+								<button class="btn btn-default" ng-show="ActiveStatus">
+									{{ActiveStatus.name}}
+								</button>
+								<button class="btn btn-default dropdown-toggle" type="button" ng-click="OpenFilter=!OpenFilter" ng-show="!ActiveStatus">
+									<span class="glyphicon glyphicon-filter"></span>
+								</button>
+								<button class="btn btn-default dropdown-toggle" type="button" ng-click="ClearFilter()" ng-show="ActiveStatus">
+									<span class="glyphicon glyphicon-remove"></span>
+								</button>
+								<ul class="dropdown-menu pull-right">
+									<li ng-repeat="stat in Statuses"
+																ng-click="setActiveStatus(stat)">
+										<a href="">
+											{{stat.name}}
+										</a>
+									</li>
+									
+								</ul>
+							</div>
+						</div>
+					</ul>
+				</div>
+				<div class="list-group-item">
+					<table class="table table-bordered">
+						<thead ng-show="Students.length">
+							<tr>
+								<th class="col-md-4">Username</th>
+								<th class="col-md-4">Student</th>
+								<th class="col-md-4">Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="Student in Students"
+								ng-click="OpenModal(Student,'edit')">
+								<td>{{Student.username}}</td>
+								<td>{{Student.name}}</td>
+								<td>{{Student.status}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="empty-state" ng-show="!Students&&!IsLoading"  >
+						<div class="well">
+							<div class="empty-state-icon">
+								<i class="glyphicon glyphicon-list-alt"></i>
+							</div>
+							<h4>No Information Available</h4>
+						</div>
+					</div>
+					<div class="empty-state" ng-show="IsLoading"  >
+						<div class="well">
+							<div class="empty-state-icon">
+								<i class="glyphicon glyphicon-refresh spin"></i>
+							</div>
+							<h4>LOADING INFORMATION</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="list-group-item list-group-search-box">
+				<div class="input-group col-md-12">
+					<input type="text" class="form-control" placeholder="Search by name" 
+					ng-change="SearchStudent()" ng-model="SearchWord" ng-model-options='{ debounce: 500 }' />
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
