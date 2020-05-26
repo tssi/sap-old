@@ -1,5 +1,5 @@
 <?php
-/* MasterModule Fixture generated on: 2020-05-18 08:12:55 : 1589782375 */
+/* MasterModule Fixture generated on: 2020-05-26 07:01:19 : 1590469279 */
 class MasterModuleFixture extends CakeTestFixture {
 	var $name = 'MasterModule';
 
@@ -26,8 +26,8 @@ class MasterModuleFixture extends CakeTestFixture {
 			'is_parent' => 1,
 			'is_child' => 1,
 			'sequence' => 1,
-			'created' => '2020-05-18 08:12:55',
-			'modified' => '2020-05-18 08:12:55',
+			'created' => '2020-05-26 07:01:18',
+			'modified' => '2020-05-26 07:01:18',
 			'created_by' => 'Lorem ip',
 			'modified_by' => 'Lorem ip'
 		),

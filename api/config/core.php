@@ -85,7 +85,7 @@
  *
  * [Note Routing.admin is deprecated in 1.3.  Use Routing.prefixes instead]
  */
-	//Configure::write('Routing.prefixes', array('admin'));
+	Configure::write('Routing.prefixes', array('admin'));
 
 /**
  * Turn off all caching application-wide.
@@ -302,3 +302,11 @@
  *
  */
 	Cache::config('default', array('engine' => 'File'));
+	Cache::config('default', array(
+		'engine' => 'File',
+		'duration'=> '+8 hours',
+		'probability'=> 100,
+		'path' => CACHE,
+		'prefix' => 'cache_medium_'
+	));
+	date_default_timezone_set('Asia/Manila');

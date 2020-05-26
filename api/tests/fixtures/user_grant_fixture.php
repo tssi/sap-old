@@ -1,5 +1,5 @@
 <?php
-/* UserGrant Fixture generated on: 2020-05-18 08:12:55 : 1589782375 */
+/* UserGrant Fixture generated on: 2020-05-26 07:06:10 : 1590469570 */
 class UserGrantFixture extends CakeTestFixture {
 	var $name = 'UserGrant';
 
@@ -18,8 +18,8 @@ class UserGrantFixture extends CakeTestFixture {
 			'id' => 1,
 			'user_type_id' => 'Lor',
 			'master_module_id' => 1,
-			'created' => '2020-05-18 08:12:55',
-			'modified' => '2020-05-18 08:12:55'
+			'created' => '2020-05-26 07:06:10',
+			'modified' => '2020-05-26 07:06:10'
 		),
 	);
 }

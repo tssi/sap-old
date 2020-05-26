@@ -1,5 +1,5 @@
 <?php
-/* UserType Fixture generated on: 2020-05-18 08:12:55 : 1589782375 */
+/* UserType Fixture generated on: 2020-05-26 07:06:35 : 1590469595 */
 class UserTypeFixture extends CakeTestFixture {
 	var $name = 'UserType';
 
@@ -16,8 +16,8 @@ class UserTypeFixture extends CakeTestFixture {
 		array(
 			'id' => 'Lor',
 			'name' => 'Lorem ipsum dolor sit amet',
-			'created' => '2020-05-18 08:12:55',
-			'modified' => '2020-05-18 08:12:55'
+			'created' => '2020-05-26 07:06:35',
+			'modified' => '2020-05-26 07:06:35'
 		),
 	);
 }

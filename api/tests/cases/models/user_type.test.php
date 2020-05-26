@@ -1,5 +1,5 @@
 <?php
-/* UserType Test cases generated on: 2020-05-18 08:12:56 : 1589782376*/
+/* UserType Test cases generated on: 2020-05-26 07:06:36 : 1590469596*/
 App::import('Model', 'UserType');
 
 class UserTypeTestCase extends CakeTestCase {

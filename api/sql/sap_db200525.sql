@@ -11,6 +11,26 @@ MySQL - 5.5.5-10.1.30-MariaDB : Database - sap_db_200525
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*Table structure for table `departments` */
+
+DROP TABLE IF EXISTS `departments`;
+
+CREATE TABLE `departments` (
+  `id` char(2) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `description` varchar(50) DEFAULT NULL,
+  `alias` varchar(10) DEFAULT NULL,
+  `esp` decimal(6,2) DEFAULT NULL,
+  `order` int(11) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `departments` */
+
+insert  into `departments`(`id`,`name`,`description`,`alias`,`esp`,`order`,`created`,`modified`) values ('GS','G.School','Grade School','GS','2017.00',4,'2018-02-12 16:18:47','2018-10-18 08:12:03'),('HS','H.School','High School','HS','2017.00',1,'2018-02-12 16:19:06','2018-10-18 08:12:03'),('PS','P.School','Pre School','PS','2017.00',3,'2018-02-12 16:18:27','2018-10-18 08:12:03'),('SH','S.High','Senior HS','SH','2017.00',2,'2018-02-12 16:19:41','2018-10-18 08:12:03');
+
 /*Table structure for table `master_modules` */
 
 DROP TABLE IF EXISTS `master_modules`;

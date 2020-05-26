@@ -1,5 +1,5 @@
 <?php
-/* UserGrant Test cases generated on: 2020-05-18 08:12:55 : 1589782375*/
+/* UserGrant Test cases generated on: 2020-05-26 07:06:12 : 1590469572*/
 App::import('Model', 'UserGrant');
 
 class UserGrantTestCase extends CakeTestCase {

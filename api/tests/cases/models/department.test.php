@@ -1,5 +1,5 @@
 <?php
-/* Department Test cases generated on: 2020-05-18 08:12:54 : 1589782374*/
+/* Department Test cases generated on: 2020-05-26 07:04:36 : 1590469476*/
 App::import('Model', 'Department');
 
 class DepartmentTestCase extends CakeTestCase {

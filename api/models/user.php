@@ -19,4 +19,21 @@ class User extends AppModel {
 			'order' => ''
 		)
 	);
+
+	var $hasMany = array(
+		'Student' => array(
+			'className' => 'Student',
+			'foreignKey' => 'user_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
+
 }

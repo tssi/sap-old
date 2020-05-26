@@ -1,5 +1,5 @@
 <?php
-/* Users Test cases generated on: 2020-05-18 08:14:11 : 1589782451*/
+/* Users Test cases generated on: 2020-05-26 07:08:46 : 1590469726*/
 App::import('Controller', 'Users');
 
 class TestUsersController extends UsersController {

@@ -1,5 +1,5 @@
 <?php
-/* User Fixture generated on: 2020-05-18 08:12:56 : 1589782376 */
+/* User Fixture generated on: 2020-05-26 07:07:01 : 1590469621 */
 class UserFixture extends CakeTestFixture {
 	var $name = 'User';
 
@@ -33,9 +33,9 @@ class UserFixture extends CakeTestFixture {
 			'ip_failed' => 'Lorem ipsum dolor ',
 			'login_success' => 1,
 			'ip_success' => 'Lorem ipsum dolor ',
-			'password_changed' => '2020-05-18 08:12:56',
-			'created' => '2020-05-18 08:12:56',
-			'modified' => '2020-05-18 08:12:56'
+			'password_changed' => '2020-05-26 07:07:01',
+			'created' => '2020-05-26 07:07:01',
+			'modified' => '2020-05-26 07:07:01'
 		),
 	);
 }

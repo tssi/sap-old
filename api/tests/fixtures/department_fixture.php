@@ -1,5 +1,5 @@
 <?php
-/* Department Fixture generated on: 2020-05-18 08:12:54 : 1589782374 */
+/* Department Fixture generated on: 2020-05-26 07:04:35 : 1590469475 */
 class DepartmentFixture extends CakeTestFixture {
 	var $name = 'Department';
 
@@ -24,8 +24,8 @@ class DepartmentFixture extends CakeTestFixture {
 			'alias' => 'Lorem ip',
 			'esp' => 1,
 			'order' => 1,
-			'created' => '2020-05-18 08:12:54',
-			'modified' => '2020-05-18 08:12:54'
+			'created' => '2020-05-26 07:04:35',
+			'modified' => '2020-05-26 07:04:35'
 		),
 	);
 }

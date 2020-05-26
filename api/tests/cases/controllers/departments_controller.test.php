@@ -1,5 +1,5 @@
 <?php
-/* Departments Test cases generated on: 2020-05-18 08:14:11 : 1589782451*/
+/* Departments Test cases generated on: 2020-05-26 07:07:33 : 1590469653*/
 App::import('Controller', 'Departments');
 
 class TestDepartmentsController extends DepartmentsController {
