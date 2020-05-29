@@ -4,8 +4,9 @@ class StudentsController extends AppController {
 	var $name = 'Students';
 
 	function index() {
-		$this->Student->recursive = 0;
-		$this->set('students', $this->paginate());
+		$this->Student->recursive = 1;
+		$students = $this->paginate();
+		$this->set('students', $students);
 	}
 
 	function view($id = null) {
