@@ -8,6 +8,9 @@ define(['app','api'],function(app){
 				$scope.ActiveDepartment = {
 					"id": "SH",
 				};
+				
+				getYearLevels();
+				
 				$scope.Statuses = [
 					{id:'ACTIV',name:'Active'},
 					{id:'INACT',name:'Inactive'},
@@ -16,7 +19,6 @@ define(['app','api'],function(app){
 					{id:'ARCVD',name:'Archived'}
 				];
 				$scope.ActivePage = 1;
-				$scope.ActiveStatus = {id:'ACTIV',name:'Active'};
 				getStudentsByActiveDepartment();
 				getUsers();
 				
@@ -33,6 +35,22 @@ define(['app','api'],function(app){
 				
 			};
 			api.GET('educ_levels',success,error);
+		};
+		
+		function getYearLevels(){
+			var success = function(response){
+				$scope.YearLevels = response.data;
+				//console.log($scope.YearLevels[0]);
+				//$scope.ActiveYearLevel = $scope.YearLevels[0];
+			};
+			var error = function(response){
+				
+			};
+			var data = {
+				department_id:$scope.ActiveDepartment.id,
+				limit:'less'
+			};
+			api.GET('year_levels', data, success, error);
 		};
 		
 		function getStudentsByActiveDepartment(){
@@ -71,16 +89,15 @@ define(['app','api'],function(app){
 			var data = {
 				department_id:$scope.ActiveDepartment.id,
 				page:$scope.ActivePage,
-				status: $scope.ActiveStatus.id,
 				limit:10
 			};
 			api.GET('students', data, success, error);
 		};
-		function getStudentsByActiveStatus(){
+		function getStudentsByActiveYearLevel(){
 			var data = {
 				department_id: $scope.ActiveDepartment.id,
 				page: $scope.ActivePage,
-				status: $scope.ActiveStatus.id,
+				year_level_id: $scope.ActiveYearLevel.id,
 				limit: 10				
 			};
 			var success = function(response){
@@ -125,15 +142,23 @@ define(['app','api'],function(app){
 				getStudentsByActiveDepartment();
 			}
 			else{
-				var data = {
-					keyword:$scope.SearchWord,
-					fields:[
-					'first_name','last_name'
-					],
-					department_id:$scope.ActiveDepartment.id,
-					status:$scope.ActiveStatus.id,
-					limit:9999
-				};
+				if( typeof $scope.ActiveYearLevel === 'undefined'){
+					var data = {
+						keyword:$scope.SearchWord,
+						fields:['first_name','last_name'],
+						department_id:$scope.ActiveDepartment.id,
+						limit:'less'
+					};
+				}else{
+					var data = {
+						keyword:$scope.SearchWord,
+						fields:['first_name','last_name'],
+						department_id:$scope.ActiveDepartment.id,
+						year_level_id:$scope.ActiveYearLevel.id,
+						limit:'less'
+					};
+				}
+
 				var success = function(response){
 					$scope.IsLoading = 0;
 					$scope.Students = response.data;
@@ -161,21 +186,25 @@ define(['app','api'],function(app){
 				department_id:$scope.ActiveDepartment.id,
 				limit:10
 			};
+			getYearLevels();
 			getUsers();
 		};
-		$scope.setActiveStatus = function(stat){
+		
+		$scope.setActiveYearLevel = function(lvl){
 			$scope.NoRecords = false;
 			$scope.Students = false;
 			$scope.IsLoading = true;
 			$scope.OpenFilter = 0;
-			$scope.ActiveStatus = stat;
-			getStudentsByActiveStatus();
+			$scope.ActiveYearLevel = lvl;
+			getStudentsByActiveYearLevel();
 		};
+		
 		$scope.ClearFilter = function(){
 			$scope.IsLoading = true;
-			$scope.ActiveStatus = '';
+			$scope.ActiveYearLevel = '';
 			getStudentsByActiveDepartment();
 		};
+		
 		$scope.navigatePage = function(page){
 			$scope.IsLoading = true;
 			$scope.Students = false;
@@ -183,7 +212,7 @@ define(['app','api'],function(app){
 			getStudentsByActiveDepartment();
 		};
 		
-		$scope.OpenModal = function(modalteacher,mode){
+		$scope.OpenModal = function(modalstudent,mode){
 			if (!mode){
 				mode = "add";
 			}
@@ -191,6 +220,7 @@ define(['app','api'],function(app){
 			var departments = $scope.Departments;
 			var users = $scope.Users;
 			var statuses = $scope.Statuses;
+			var yearlevels = $scope.YearLevels;
 			var config = {
 				templateUrl:"ModalContent.html",
 				controller:"StudentModalController",
@@ -201,11 +231,14 @@ define(['app','api'],function(app){
 					Users:function(){
 						return users;
 					},
+					YearLevels:function(){
+						return yearlevels;
+					},
 					Statuses:function(){
 						return statuses;
 					},
 					ModalStudent:function(){
-						return modalteacher;
+						return modalstudent;
 					},
 					Mode:function(){
 						return mode;
@@ -226,12 +259,13 @@ define(['app','api'],function(app){
 		};
 		
 	}]);
-	app.register.controller('StudentModalController',['$scope','$uibModalInstance','api','Departments','Users','Statuses','ModalStudent','Mode',function($scope,$uibModalInstance,api,Departments,Users,Statuses,ModalStudent,Mode){
-		console.log(Users);
+	app.register.controller('StudentModalController',['$scope','$uibModalInstance','api','Departments','YearLevels','Users','Statuses','ModalStudent','Mode',function($scope,$uibModalInstance,api,Departments,YearLevels,Users,Statuses,ModalStudent,Mode){
+	
 		$scope.idle = true;
 		$scope.Departments = angular.copy(Departments);
 		$scope.Users = angular.copy(Users);
 		$scope.Statuses = angular.copy(Statuses);
+		$scope.YearLevels = angular.copy(YearLevels);
 		$scope.ModalStudent = {};
 		$scope.Mode = angular.copy(Mode);
 		
@@ -241,11 +275,13 @@ define(['app','api'],function(app){
 			$scope.Department = {};
 			$scope.Department.id = $scope.ModalStudent.department_id;
 			$scope.ModalStudent = angular.copy(ModalStudent);
+				console.log($scope.ModalStudent);
 			$scope.Statuses.map(function(item){
 				if(item.id === $scope.ModalStudent.status)
 					$scope.ModalStudent.status = item;
 			});
 		}
+		
 		$scope.chooseGender = function(gender){
 			switch (gender){
 				case "male":
@@ -256,13 +292,16 @@ define(['app','api'],function(app){
 				break;
 			}
 		};
+		
 		$scope.setActiveDepartment = function(department){
 			$scope.ActiveDepartment = department;
 			$scope.ModalStudent.department_id = department.id;
 		};
+		
 		$scope.cancelModal = function(){
 			$uibModalInstance.dismiss();
 		};
+		
 		$scope.confirmModal = function(){
 			$scope.idle = false;
 			if($scope.Mode === 'add'){
@@ -272,7 +311,6 @@ define(['app','api'],function(app){
 				var error = function(response){
 					
 				};
-				
 				
 				var data =  angular.copy($scope.ModalStudent);
 					data.status =  $scope.ModalStudent.status.id;
@@ -313,6 +351,7 @@ define(['app','api'],function(app){
 			}
 			
 		};
+		
 		$scope.deleting = false;
 		$scope.deleteModal = function(){
 			$scope.deleting = true;

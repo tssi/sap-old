@@ -36,6 +36,17 @@
 				</div>
 				<div class="col-md-4">
 					<div class="form-group">
+						<label>User</label>
+						<div class="form-group">
+							<select class="form-control" ng-model="ModalStudent.user_id"
+														 ng-options="user.id as user.username for user in Users | orderBy:'username' ">
+								<option value="">--Select--</option>
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="form-group">
 						<label>Gender</label>
 						<div class="btn-group btn-group-justified">
 							<a class="btn btn-default" ng-click="chooseGender('male')" ng-class="{'btn-primary':ModalStudent.gender==='M'}">Male</a>
@@ -45,7 +56,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4">
+				<div class="col-md-5">
 					<div class="form-group">
 						<label>Department</label>
 						<div class="btn-group btn-group-justified">
@@ -60,16 +71,16 @@
 				</div>
 				<div class="col-md-4">
 					<div class="form-group">
-						<label>User</label>
+						<label>Year Level</label>
 						<div class="form-group">
-							<select class="form-control" ng-model="ModalStudent.user_id"
-														 ng-options="user.id as user.username for user in Users | orderBy:'username' ">
+							<select class="form-control" ng-model="ModalStudent.year_level_id"
+														 ng-options="level.name for level in YearLevels track by level.id">
 								<option value="">--Select--</option>
 							</select>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
+				<div class="col-md-3">
 					<div class="form-group">
 						<label>Status</label>
 						<div class="form-group">
@@ -118,23 +129,23 @@
 						</li>
 						<div class="pull-right">
 							<div class="btn-group dropdown" ng-class="{open:OpenFilter}">
-								<button class="btn btn-default" ng-hide="ActiveStatus">
-									Filter Status
+								<button class="btn btn-default" ng-hide="ActiveYearLevel">
+									Filter Year Level
 								</button>
-								<button class="btn btn-default" ng-show="ActiveStatus">
-									{{ActiveStatus.name}}
+								<button class="btn btn-default" ng-show="ActiveYearLevel">
+									{{ActiveYearLevel.name}}
 								</button>
-								<button class="btn btn-default dropdown-toggle" type="button" ng-click="OpenFilter=!OpenFilter" ng-show="!ActiveStatus">
+								<button class="btn btn-default dropdown-toggle" type="button" ng-click="OpenFilter=!OpenFilter" ng-show="!ActiveYearLevel">
 									<span class="glyphicon glyphicon-filter"></span>
 								</button>
-								<button class="btn btn-default dropdown-toggle" type="button" ng-click="ClearFilter()" ng-show="ActiveStatus">
+								<button class="btn btn-default dropdown-toggle" type="button" ng-click="ClearFilter()" ng-show="ActiveYearLevel">
 									<span class="glyphicon glyphicon-remove"></span>
 								</button>
 								<ul class="dropdown-menu pull-right">
-									<li ng-repeat="stat in Statuses"
-																ng-click="setActiveStatus(stat)">
+									<li ng-repeat="lvl in YearLevels"
+																ng-click="setActiveYearLevel(lvl)">
 										<a href="">
-											{{stat.name}}
+											{{lvl.description}}
 										</a>
 									</li>
 									
@@ -147,17 +158,17 @@
 					<table class="table table-bordered">
 						<thead ng-show="Students.length">
 							<tr>
-								<th class="col-md-4">Username</th>
+								<th class="col-md-4">LRN</th>
 								<th class="col-md-4">Student</th>
-								<th class="col-md-4">Status</th>
+								<th class="col-md-4">Year Level</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr ng-repeat="Student in Students"
 								ng-click="OpenModal(Student,'edit')">
-								<td>{{Student.username}}</td>
-								<td>{{Student.name}}</td>
-								<td>{{Student.status}}</td>
+								<td>{{Student.lrn}}</td>
+								<td>{{Student.first_name}}</td>
+								<td>{{Student.year_level_id}}</td>
 							</tr>
 						</tbody>
 					</table>
