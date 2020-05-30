@@ -2,107 +2,88 @@
 	<button class="btn btn-primary btn-fab top right fixed" ng-click="OpenModal()">
 		<span class="glyphicon glyphicon-plus"></span>
 	</button>
-	<script type="text/ng-template" id="ModalContent.html">
-		<div class="modal-header">
-			<h3 class="modal-title">Student Information</h3>
-		</div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-4">
-					<div class="form-group">
-						<label>First Name</label>
-						<input class="form-control" ng-model="ModalStudent.first_name"/>
-					</div>
+	<!-- Modal -->
+	<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">Student Information</h3>
 				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-						<label>Middle Name</label>
-						<input class="form-control" ng-model="ModalStudent.middle_name"/>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-						<label>Last Name</label>
-						<input class="form-control" ng-model="ModalStudent.last_name"/>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="form-group">
-						<label>Suffix</label>
-						<input class="form-control" placeholder="Jr / Sr / III" ng-model="ModalStudent.suffix"/>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-						<label>User</label>
-						<div class="form-group">
-							<select class="form-control" ng-model="ModalStudent.user_id"
-														 ng-options="user.id as user.username for user in Users | orderBy:'username' ">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-4">
+							<label>First Name</label>
+							<input class="form-control" ng-model="ModalData.first_name"/>
+						</div>
+						<div class="col-md-4">
+							<label>Middle Name</label>
+							<input class="form-control" ng-model="ModalData.middle_name"/>
+						</div>
+						<div class="col-md-4">
+							<label>Last Name</label>
+							<input class="form-control" ng-model="ModalData.last_name"/>			
+						</div>
+					</div><br/>
+					<div class="row">
+					
+						<div class="col-md-4">
+							<label>Suffix</label>
+							<input class="form-control" placeholder="Jr / Sr / III" ng-model="ModalData.suffix"/>
+						</div>
+						<div class="col-md-4">
+							<label>Gender</label>
+							<select class="form-control" ng-model="ModalData.gender">
+								<option value="">--Select--</option>
+								<option value="M">Male</option>
+								<option value="F">Female</option>
+							</select>
+						</div>
+						
+						<div class="col-md-4">
+							<label>Department</label>
+							<select class="form-control" ng-model="ModalData.department"
+														 ng-options="Department.name for Department in Departments track by Department.id"
+														 ng-change="filterLevel(ModalData.department.id)">
 								<option value="">--Select--</option>
 							</select>
 						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-						<label>Gender</label>
-						<div class="btn-group btn-group-justified">
-							<a class="btn btn-default" ng-click="chooseGender('male')" ng-class="{'btn-primary':ModalStudent.gender==='M'}">Male</a>
-							<a class="btn btn-default" ng-click="chooseGender('female')" ng-class="{'btn-primary':ModalStudent.gender==='F'}">Female</a>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-5">
-					<div class="form-group">
-						<label>Department</label>
-						<div class="btn-group btn-group-justified">
-							<div class="btn-group" ng-repeat="Department in Departments"
-												   ng-click="setActiveDepartment(Department)">
-								<button class="btn btn-default" ng-class="{'btn-primary':ModalStudent.department_id===Department.id}">
-									{{Department.id}}
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="form-group">
-						<label>Year Level</label>
-						<div class="form-group">
-							<select class="form-control" ng-model="ModalStudent.year_level_id"
+					</div><br/>
+					<div class="row">
+						<div class="col-md-4">
+							<label>Year Level</label>
+							<select class="form-control" ng-model="ModalData.year_level"
 														 ng-options="level.name for level in YearLevels track by level.id">
 								<option value="">--Select--</option>
 							</select>
 						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="form-group">
-						<label>Status</label>
-						<div class="form-group">
-							<select class="form-control" ng-model="ModalStudent.status"
+						<div class="col-md-4">
+							<label>User</label>
+							<div class="form-group">
+								<select class="form-control" ng-model="ModalData.user_id"
+															 ng-options="user.id as user.username for user in Users | orderBy:'username' ">
+									<option value="">--Select--</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<label>Status</label>
+							<select class="form-control" ng-model="ModalData.status"
 														 ng-options="status.name for status in Statuses track by status.id">
 								<option value="">--Select--</option>
 							</select>
 						</div>
 					</div>
 				</div>
+				<div class="modal-footer">
+					<button class="btn btn-default pull-left" ng-click="cancelModal()">Cancel</button>
+					<button class="btn btn-danger pull-left" ng-click="deleteModal()" ng-show="Mode==='edit'&&!deleting">Archive</button>
+					<button class="btn btn-primary" ng-click="save()">Save</button>
+					<button class="btn btn-danger pull-left" ng-disabled="deleting" ng-show="deleting">Deleting...</button>
+				</div>
 			</div>
 		</div>
-		<div class="modal-footer">
-			<button class="btn btn-default pull-left" ng-click="cancelModal()">Cancel</button>
-			<button class="btn btn-danger pull-left" ng-click="deleteModal()" ng-show="Mode==='edit'&&!deleting">Archive</button>
-			<button class="btn btn-primary" ng-click="confirmModal()" ng-show="idle">Confirm</button>
-			<button class="btn btn-primary" ng-disabled="!idle" ng-show="!idle">Saving...</button>
-			<button class="btn btn-danger pull-left" ng-disabled="deleting" ng-show="deleting">Deleting...</button>
-		</div>
-	</script>
-	<div class="col-md-12">
-		<div class="list-group">
+	</div>
+	<div class="list-group">
 			<div class="list-group-item list-group-header">
 				<div class="pull-right"> 
 					<div class="btn-group btn-group-sm">
@@ -155,20 +136,25 @@
 					</ul>
 				</div>
 				<div class="list-group-item">
-					<table class="table table-bordered">
+					<table class="table table-bordered table-striped">
 						<thead ng-show="Students.length">
 							<tr>
-								<th class="col-md-4">LRN</th>
-								<th class="col-md-4">Student</th>
-								<th class="col-md-4">Year Level</th>
+								<th>LRN</th>
+								<th>Student</th>
+								<th>Year Level</th>
+								<th class="text-center" >Action</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="Student in Students"
-								ng-click="OpenModal(Student,'edit')">
+							<tr ng-repeat="Student in Students">
 								<td>{{Student.lrn}}</td>
-								<td>{{Student.first_name}}</td>
+								<td>{{Student.first_name}} {{Student.middle_name}} {{Student.last_name}} {{Student.suffix}}</td>
 								<td>{{Student.year_level_id}}</td>
+								<td class="text-center" ng-click="OpenModal(Student,'edit')">
+									<a href="javascript:void(0)" >
+										<i class="glyphicon glyphicon-edit"></i>
+									</a>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -200,3 +186,4 @@
 	</div>
 
 </div>
+	

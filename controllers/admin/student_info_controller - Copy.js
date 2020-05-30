@@ -9,7 +9,7 @@ define(['app','api'],function(app){
 					"id": "SH",
 				};
 				
-				getYearLevels($scope.ActiveDepartment.id);
+				getYearLevels();
 				
 				$scope.Statuses = [
 					{id:'ACTIV',name:'Active'},
@@ -27,7 +27,11 @@ define(['app','api'],function(app){
 			$scope.NoRecords = false;
 		};
 		
-		
+		$scope.Open = function (){
+			$scope.isEdit = false;
+			$scope.ModalLabel = 'Add Photo';
+			$('#Modal').modal('show');
+		}
 		
 		function getDepartments(){
 			var success = function(response){
@@ -39,7 +43,7 @@ define(['app','api'],function(app){
 			api.GET('educ_levels',success,error);
 		};
 		
-		function getYearLevels(department_id){
+		function getYearLevels(){
 			var success = function(response){
 				$scope.YearLevels = response.data;
 				//console.log($scope.YearLevels[0]);
@@ -49,7 +53,7 @@ define(['app','api'],function(app){
 				
 			};
 			var data = {
-				department_id:department_id,
+				department_id:$scope.ActiveDepartment.id,
 				limit:'less'
 			};
 			api.GET('year_levels', data, success, error);
@@ -188,7 +192,7 @@ define(['app','api'],function(app){
 				department_id:$scope.ActiveDepartment.id,
 				limit:10
 			};
-			getYearLevels($scope.ActiveDepartment.id);
+			getYearLevels();
 			getUsers();
 		};
 		
@@ -214,66 +218,157 @@ define(['app','api'],function(app){
 			getStudentsByActiveDepartment();
 		};
 		
-		
-		$scope.OpenModal = function (data,mode){
-			$('#Modal').modal('show');
-			$scope.ModalData = [];
-			
-			
-			if(mode == "edit"){
-				console.log(data);
-				$scope.ModalData = data;
-				$scope.Statuses.map(function(item){
-					if(item.id === $scope.ModalData.status)
-						$scope.ModalData.status = item;
-				});
+		$scope.OpenModal = function(modalstudent,mode){
+			if (!mode){
+				mode = "add";
 			}
-		}
+			$scope.Mode = mode;
+			var departments = $scope.Departments;
+			var users = $scope.Users;
+			var statuses = $scope.Statuses;
+			var yearlevels = $scope.YearLevels;
+			var config = {
+				templateUrl:"ModalContent.html",
+				controller:"StudentModalController",
+				resolve:{
+					Departments:function(){
+						return departments;
+					},
+					Users:function(){
+						return users;
+					},
+					YearLevels:function(){
+						return yearlevels;
+					},
+					Statuses:function(){
+						return statuses;
+					},
+					ModalStudent:function(){
+						return modalstudent;
+					},
+					Mode:function(){
+						return mode;
+					}
+				}
+			};
+			var modal = $uibModal.open(config);
+			var promise = modal.result;
+			var callback = function(activedept){
+				$scope.CallBack = 1;
+				$scope.ActiveDepartment.id = activedept;
+				console.log(activedept);
+				getStudentsByActiveDepartment();
+			};
+			var fallback = function(){
+			};
+			promise.then(callback,fallback);
+		};
 		
-		$scope.cancelModal = function (data,mode){
-			$('#Modal').modal('hide');
-		}
+	}]);
+	app.register.controller('StudentModalController',['$scope','$uibModalInstance','api','Departments','YearLevels','Users','Statuses','ModalStudent','Mode',function($scope,$uibModalInstance,api,Departments,YearLevels,Users,Statuses,ModalStudent,Mode){
+	
+		$scope.idle = true;
+		$scope.Departments = angular.copy(Departments);
+		$scope.Users = angular.copy(Users);
+		$scope.Statuses = angular.copy(Statuses);
+		$scope.YearLevels = angular.copy(YearLevels);
+		$scope.ModalStudent = {};
+		$scope.Mode = angular.copy(Mode);
 		
-		$scope.filterLevel = function(department_id){
-			getYearLevels(department_id);
-		}
 		
-		$scope.save = function(){
+		if ($scope.Mode === "edit"){
 			
+			$scope.Department = {};
+			$scope.Department.id = $scope.ModalStudent.department_id;
+			$scope.ModalStudent = angular.copy(ModalStudent);
+				console.log($scope.ModalStudent);
+			$scope.Statuses.map(function(item){
+				if(item.id === $scope.ModalStudent.status)
+					$scope.ModalStudent.status = item;
+			});
+		}
+		
+		$scope.chooseGender = function(gender){
+			switch (gender){
+				case "male":
+					$scope.ModalStudent.gender = "M";
+				break;
+				case "female":
+					$scope.ModalStudent.gender = "F";
+				break;
+			}
+		};
+		
+		$scope.setActiveDepartment = function(department){
+			$scope.ActiveDepartment = department;
+			$scope.ModalStudent.department_id = department.id;
+		};
+		
+		$scope.cancelModal = function(){
+			$uibModalInstance.dismiss();
+		};
+		
+		$scope.confirmModal = function(){
+			$scope.idle = false;
+			if($scope.Mode === 'add'){
+				var success = function(response){
+					$uibModalInstance.close($scope.ModalStudent.department_id);
+				};
+				var error = function(response){
+					
+				};
+				
+				var data =  angular.copy($scope.ModalStudent);
+					data.status =  $scope.ModalStudent.status.id;
+					console.log($scope.ModalStudent.status.id);
+				api.POST('students',data,success,error);
+			}
+			
+			if ($scope.Mode === "edit"){
+				var success = function(response){
+					$uibModalInstance.close($scope.ModalStudent.department_id);
+				};
+				
+				var error = function(response){
+					console.log(response);
+				};
+				var data = {
+					id : $scope.ModalStudent.id, 
+					user_id : $scope.ModalStudent.user_id,
+					status : $scope.ModalStudent.status.id,
+					department_id : $scope.ModalStudent.department_id,
+					first_name : $scope.ModalStudent.first_name,
+					last_name : $scope.ModalStudent.last_name,
+					middle_name : $scope.ModalStudent.middle_name,
+					suffix : $scope.ModalStudent.suffix
+					
+				};
+				data.action = "edit";
+				console.log(data);
+				var dept_id = {
+					id : $scope.ModalStudent.user_id,
+					department_id: $scope.ModalStudent.department_id
+				};
+				if($scope.ModalStudent.user_id!=null){
+					api.POST('users', dept_id, success, error);
+					//api.POST('students', data, success, error);
+				}
+				api.POST('students', data, success, error);
+			}
+			
+		};
+		
+		$scope.deleting = false;
+		$scope.deleteModal = function(){
+			$scope.deleting = true;
 			var success = function(response){
-				console.log(response);
-				$('#Modal').modal('hide');
+				$uibModalInstance.close($scope.ModalStudent.department_id);
 			};
 			var error = function(response){
-				console.log(response);
-			};
-			var data = $scope.ModalData;
-			var data = {
-				id : $scope.ModalData.id, 
-				user_id : $scope.ModalData.user_id,
-				status : $scope.ModalData.status.id,
-				department_id : $scope.ModalData.department.id,
-				year_level_id : $scope.ModalData.year_level.id,
-				first_name : $scope.ModalData.first_name,
-				last_name : $scope.ModalData.last_name,
-				middle_name : $scope.ModalData.middle_name,
-				suffix : $scope.ModalData.suffix,
-				gender : $scope.ModalData.gender,
 				
 			};
-			
-			if($scope.ModalData.user_id!=null){
-				var dept_id = {
-					id : $scope.ModalData.user_id,
-					department_id: $scope.ModalData.department_id
-				};
-				api.POST('users', dept_id, success, error);
-				//api.POST('students', data, success, error);
-			}
-		
-			api.POST('students', data, success, error);
-			
-		}
-		
-	}]); 
+			var data = {id:$scope.ModalStudent.id};
+			api.DELETE('students', data, success, error);
+		};
+	}]);
 });
