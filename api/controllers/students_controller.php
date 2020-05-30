@@ -4,8 +4,35 @@ class StudentsController extends AppController {
 	var $name = 'Students';
 
 	function index() {
-		$this->Student->recursive = 1;
+		$this->Student->recursive = 2;
 		$students = $this->paginate();
+		//pr($students);exit;
+		if($this->isAPIRequest()){
+			foreach($students as $i =>$STU){
+				//pr($STU);
+				
+				$student = $STU['Student'];
+				$student['department_id'] = $STU['YearLevel']['department_id'];
+				$student['department'] = $STU['YearLevel']['Department'];
+				$student['user'] = $STU['User'];
+				
+				if(isset($STU['YearLevel']['name'])){
+					unset($STU['YearLevel']['created']);
+					unset($STU['YearLevel']['modified']);
+					unset($STU['YearLevel']['Department']);
+					$student['year_level']=$STU['YearLevel']; 
+				}
+				if(isset($STU['User']['name'])){
+					$student['user']=$STU['User']; 
+				}
+				
+				$STU['Student'] = $student;
+				//pr($STU['Student']);
+				$students[$i]=$STU;
+			}
+		}
+		
+		
 		$this->set('students', $students);
 	}
 

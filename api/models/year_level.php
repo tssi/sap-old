@@ -14,8 +14,10 @@ class YearLevel extends AppModel {
 			'order' => ''
 		)
 	);
-
-	var $hasMany = array(
+	
+	//This Association Slow Student Query if set on Recursive 2 on Student Model 
+	// For concern contact Paulo Biscocho
+	/* var $hasMany = array(
 		'Student' => array(
 			'className' => 'Student',
 			'foreignKey' => 'year_level_id',
@@ -29,6 +31,6 @@ class YearLevel extends AppModel {
 			'finderQuery' => '',
 			'counterQuery' => ''
 		)
-	);
+	); */
 	
 }
