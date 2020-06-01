@@ -5,7 +5,32 @@ class UsersController extends AppController {
 
 	function index() {
 		$this->User->recursive = 0;
-		$this->set('users', $this->paginate());
+		$users = $this->paginate();
+		
+		//pr($users);exit;
+		if($this->isAPIRequest()){
+			foreach($users as $i =>$user){
+				//pr($user['User']['status']);
+				switch($user['User']['status']){
+					case 'ACTIV': 
+						$status = array('id'=>'ACTIV','name'=>'Active');
+						break;
+					case 'ARCVD': 
+						$status = array('id'=>'ACTIV','name'=>'Archived');
+						break;
+				}
+				
+				$user['User']['active_status'] = $status;
+		
+				//pr($user['Student']);
+				$users[$i]=$user;
+			}
+		}
+		
+		
+		$this->set('users', $users);
+		
+		
 	}
 
 	function view($id = null) {
@@ -64,4 +89,33 @@ class UsersController extends AppController {
 		$this->Session->setFlash(__('User was not deleted', true));
 		$this->redirect(array('action' => 'index'));
 	}
+
+	function change_pass(){
+		if(isset($this->data)){
+			$oldPass =  $this->data['User']['old_password'];
+			$oldPass =  $this->Auth->password($oldPass);
+			$newPass =  $this->data['User']['new_password'];
+			$newPass =  $this->Auth->password($newPass);
+			$loggedIn = $this->Auth->user()['User'];
+			$user  =$this->User->findById($loggedIn['id'])['User'];
+			$currPass =  $user['password'];
+			if($currPass==$oldPass){
+				if($newPass==$oldPass){
+					$this->Session->setFlash(__('Try something new. Password similar to current.', true));
+					$this->cakeError('dataNotSet');  
+				}else{
+					$user['password']=$newPass;
+					$user['password_changed'] = date("Y-m-d H:i:s");
+					$this->User->save($user);
+					$this->Session->setFlash(__('Password updated', true));	
+				}
+			}else{
+				$this->Session->setFlash(__('Incorrect Password', true));
+				$this->cakeError('invalidLogin');  
+			}
+		}
+		$this->redirect(array('action'=>'index'));
+
+	}
+
 }

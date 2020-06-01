@@ -48,7 +48,9 @@ class StudentsController extends AppController {
 		if (!empty($this->data)) {
 			$this->Student->create();
 			if ($this->Student->save($this->data)) {
-				$this->Session->setFlash(__('The student has been saved', true));
+				$this->data['Student']['id']=  $this->Student->id;
+				$this->updateUser($this->data);
+				$this->Session->setFlash(__('The teacher has been saved', true));
 				$this->redirect(array('action' => 'index'));
 			} else {
 				$this->Session->setFlash(__('The student could not be saved. Please, try again.', true));
@@ -89,5 +91,19 @@ class StudentsController extends AppController {
 		}
 		$this->Session->setFlash(__('Student was not deleted', true));
 		$this->redirect(array('action' => 'index'));
+	}
+	
+	protected function updateUser($data){
+		$studentId =  $data['Student']['id'];
+		$studentObj = $this->Student->findById($studentId);
+		$user =  $studentObj['User'];
+		//pr($user);	exit;
+		$user['status'] = $data['Student']['status'];		
+		$user['department_id'] = $data['Student']['department_id'];	
+		unset($user['Department']);
+		unset($user['UserType']);
+		unset($user['Student']);
+		//pr($user);	exit;	
+		$this->Student->User->save($user);
 	}
 }

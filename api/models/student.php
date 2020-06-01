@@ -50,7 +50,7 @@ class Student extends AppModel {
 				
 				if(in_array($search1[0],$keys)){
 					$val = array_values($cond);
-					pr($val);
+					//pr($val);
 					$students = $this->find('list',
 								array('conditions'=>
 									array('OR'=>array('Student.full_name LIKE'=>$val[0],
