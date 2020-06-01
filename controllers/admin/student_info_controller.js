@@ -254,9 +254,9 @@ define(['app','api'],function(app){
 			var success = function(response){
 				//console.log($scope.Mode);
 				//console.log($scope.ActiveDepartment.id);
-				
 				$('#Modal').modal('hide');
 				$scope.CallBack = 1;
+				$scope.ActiveStatus = '';
 				getStudentsByActiveDepartment();
 			};
 			var error = function(response){

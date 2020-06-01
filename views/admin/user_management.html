@@ -26,6 +26,22 @@
 					</div><br/>
 					<div class="row">
 						<div class="col-md-6">
+							<label>User Type</label>
+							<select ng-disabled="isReset" class="form-control" ng-model="ModalData.user_type_id"
+															 ng-options="userType.id as userType.name for userType in UserTypes | orderBy:'id' ">
+								<option value="">--Select User Type--</option>
+							</select>
+						</div>
+						<div class="col-md-6">
+							<label>Department</label>
+							<select ng-disabled="isReset" class="form-control" ng-model="ModalData.department_id"
+															 ng-options="department.id as department.description for department in Departments | orderBy:'id' ">
+								<option value="">--Select Department--</option>
+							</select>
+						</div>
+					</div><br/>
+					<div class="row">
+						<div class="col-md-6">
 							<label>Password</label>
 							<input  ng-disabled="isReset" class="form-control" ng-model="ModalData.password"/>
 						</div>
@@ -45,20 +61,6 @@
 			</div>
 		</div>
 	</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<div class="col-md-12">
 		<div class="list-group">
 			<div class="list-group-item list-group-header">

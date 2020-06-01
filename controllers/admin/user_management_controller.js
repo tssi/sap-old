@@ -5,6 +5,7 @@ define(['app','api'],function(app){
 			$rootScope.$watch('_APP',function($app){
 				if (!$app) return;
 				getDepartments();
+				getUserTypes();
 				$scope.ActiveDepartment = {
 					"id": "SH",
 				};
@@ -29,6 +30,19 @@ define(['app','api'],function(app){
 				
 			};
 			api.GET('educ_levels',success,error);
+		};
+		
+		function getUserTypes(){
+			var success = function(response){
+				$scope.UserTypes = response.data;
+			};
+			var error = function(response){
+				
+			};
+			var data = {
+				limit:"less",	
+			};
+			api.GET('user_types',data,success,error);
 		};
 		
 		function getUsersByActiveDepartment(){
@@ -74,7 +88,7 @@ define(['app','api'],function(app){
 		
 		function getUsersByActiveStatus(){
 			var data = {
-				//department_id: $scope.ActiveDepartment.id,
+				department_id: $scope.ActiveDepartment.id,
 				page: $scope.ActivePage,
 				status: $scope.ActiveStatus.id,
 				limit: 10				
@@ -186,46 +200,37 @@ define(['app','api'],function(app){
 		$scope.OpenModal = function (data,mode){
 			$('#Modal').modal('show');
 			$scope.ModalData = [];
-			$scope.Mode = mode;
-			
-			
 			$scope.isReset = false;
+			
 			$scope.reset = function(){
 				$scope.isReset = true;
 			}
 			
-			
 			if(mode == "edit"){
-				console.log(data);
 				$scope.ModalData = data;
+				$scope.Mode = mode;
+			}else{
+				$scope.Mode = 'add';
 			}
 		}
 		
 		$scope.cancelModal = function (data,mode){
 			$('#Modal').modal('hide');
 		}
-		
-		$scope.filterLevel = function(department_id){
-			getYearLevels(department_id);
-		}
-		
+			
 		$scope.save = function(){
 			var success = function(response){
-				$('#Modal').modal('hide');
-				console.log($scope.Mode);
-				console.log($scope.ModalData.department);
-				$scope.ActiveDepartment.id = $scope.ModalData.department.id;
-				getUsersByActiveDepartment()();
+				//$('#Modal').modal('hide');
+				//console.log('232');
+				//console.log($scope.Mode);
+				//console.log($scope.ActiveDepartment.id);
+				//$scope.CallBack = 1;
+				//$scope.ActiveStatus = '';
+				//getUsersByActiveDepartment();
 			};
 			var error = function(response){
 				console.log(response);
 			};
-			
-			
-			
-			
-			
-			
 			
 			if($scope.isReset){
 				var data = {
@@ -237,17 +242,13 @@ define(['app','api'],function(app){
 					id : $scope.ModalData.id,
 					username : $scope.ModalData.username,
 					password : $scope.ModalData.password,
+					department_id : $scope.ModalData.department_id,
+					user_type_id : $scope.ModalData.user_type_id,
 					status : $scope.ModalData.active_status.id
 				};
-				//data.action = "edit";
-				//console.log(data);return;
+			
 				api.POST('users', data, success, error);
 			}
-			
 		}
-		
-
-
 	}]);
-	
 });
