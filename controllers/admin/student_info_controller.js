@@ -67,6 +67,7 @@ define(['app','api'],function(app){
 				if ($scope.LastItem > $scope.TotalItems){
 					$scope.LastItem = $scope.TotalItems;
 				};
+				
 				if ($scope.CallBack === 1){
 					if ($scope.Mode === "edit"){
 						if ($scope.TotalItems - (($scope.ActivePage - 1) * 10) === 0){
@@ -219,19 +220,30 @@ define(['app','api'],function(app){
 			$('#Modal').modal('show');
 			$scope.ModalData = [];
 			
-			
 			if(mode == "edit"){
 				console.log(data);
+				$scope.Mode = mode;
 				$scope.ModalData = data;
 				$scope.Statuses.map(function(item){
 					if(item.id === $scope.ModalData.status)
 						$scope.ModalData.status = item;
 				});
+			}else{
+				$scope.Mode = "add";
 			}
 		}
 		
 		$scope.cancelModal = function (data,mode){
 			$('#Modal').modal('hide');
+			$scope.Mode = "edit"
+			$scope.ActiveDepartment.id = "SH";
+			console.log($scope.Mode);
+			console.log($scope.ActiveDepartment.id);
+			
+			$('#Modal').modal('hide');
+			
+			$scope.CallBack = 1;
+			getStudentsByActiveDepartment();
 		}
 		
 		$scope.filterLevel = function(department_id){
@@ -239,15 +251,19 @@ define(['app','api'],function(app){
 		}
 		
 		$scope.save = function(){
-			
 			var success = function(response){
-				console.log(response);
+				//console.log($scope.Mode);
+				//console.log($scope.ActiveDepartment.id);
+				
 				$('#Modal').modal('hide');
+				$scope.CallBack = 1;
+				getStudentsByActiveDepartment();
 			};
 			var error = function(response){
 				console.log(response);
 			};
 			var data = $scope.ModalData;
+			
 			var data = {
 				id : $scope.ModalData.id, 
 				user_id : $scope.ModalData.user_id,
@@ -261,16 +277,10 @@ define(['app','api'],function(app){
 				gender : $scope.ModalData.gender,
 				
 			};
-			
-			if($scope.ModalData.user_id!=null){
-				var dept_id = {
-					id : $scope.ModalData.user_id,
-					department_id: $scope.ModalData.department_id
-				};
-				api.POST('users', dept_id, success, error);
-				//api.POST('students', data, success, error);
+			if(!$scope.ModalData.id){
+				data.lrn = "";
+				data.sno = "";
 			}
-		
 			api.POST('students', data, success, error);
 			
 		}

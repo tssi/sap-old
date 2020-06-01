@@ -76,7 +76,7 @@ define(['app','api'],function(app){
 			var data = {
 				//department_id: $scope.ActiveDepartment.id,
 				page: $scope.ActivePage,
-				//status: $scope.ActiveStatus.id,
+				status: $scope.ActiveStatus.id,
 				limit: 10				
 			};
 			var success = function(response){
@@ -182,151 +182,72 @@ define(['app','api'],function(app){
 			$scope.ActivePage = page;
 			getUsersByActiveDepartment();
 		};
-		
-		$scope.OpenModal = function(ModalUser,mode){
-			if (!mode){
-				mode = "add";
-			}
+
+		$scope.OpenModal = function (data,mode){
+			$('#Modal').modal('show');
+			$scope.ModalData = [];
 			$scope.Mode = mode;
-			var departments = $scope.Departments;
-			var userTypes = $scope.UserTypes;
 			
-			var users = $scope.Users;
-			var statuses = $scope.Statuses;
-			var config = {
-				templateUrl:"UserManagementModalContent.html",
-				controller:"UserManagementModalController",
-				resolve:{
-					Departments:function(){
-						return departments;
-					},
-					UserTypes:function(){
-						return userTypes;
-					},
-					Users:function(){
-						return users;
-					},
-					Statuses:function(){
-						return statuses;
-					},
-					ModalUser:function(){
-						return ModalUser;
-					},
-					Mode:function(){
-						return mode;
-					}
-				}
-			};
-			var modal = $uibModal.open(config);
-			var promise = modal.result;
-			var callback = function(activedept){
-				$scope.CallBack = 1;
-				$scope.ActiveDepartment.id = activedept;
-				getUsersByActiveDepartment();
-			};
-			var fallback = function(){
-			};
-			promise.then(callback,fallback);
-		};
-		
-	}]);
-	app.register.controller('UserManagementModalController',['$scope','$uibModalInstance','api','Departments','UserTypes','Users','Statuses','ModalUser','Mode',function($scope,$uibModalInstance,api,Departments,UserTypes,Users,Statuses,ModalUser,Mode){
-	
-		$scope.idle = true;
-		$scope.deleting = false;
-		$scope.Departments = angular.copy(Departments);
-		$scope.UserTypes = angular.copy(UserTypes);
-		$scope.Users = angular.copy(Users);
-		$scope.Statuses = angular.copy(Statuses);
-		$scope.ModalUser = {};
-		$scope.Mode = angular.copy(Mode);
-		$scope.isReset = false;
-		
-		//Populate from  Row Data
-		if ($scope.Mode === "edit"){
-			$scope.Department = {};
-			$scope.UserType = {};
-			$scope.ModalUser = angular.copy(ModalUser);
 			
+			$scope.isReset = false;
+			$scope.reset = function(){
+				$scope.isReset = true;
+			}
+			
+			
+			if(mode == "edit"){
+				console.log(data);
+				$scope.ModalData = data;
+			}
 		}
 		
-		$scope.setActiveDepartment = function(department){
-			$scope.ActiveDepartment = department;
-			$scope.ModalUser.department_id = department.id;
-		};
+		$scope.cancelModal = function (data,mode){
+			$('#Modal').modal('hide');
+		}
 		
-		$scope.confirmModal = function(){
-			$scope.idle = false;
-			
-			if($scope.Mode === 'add'){
-				var success = function(response){
-					$uibModalInstance.close($scope.ModalUser.department_id);
-				};
-				var error = function(response){
-					
-				};
-				var data =  angular.copy($scope.ModalUser);
-					data.status =  'ACTIV';
-					//console.log(data);return;
-				api.POST('users',data,success,error);
-			}
-			
-			if ($scope.Mode === "edit"){
-				var success = function(response){
-					$uibModalInstance.close($scope.ModalUser.department_id);
-				};
-				
-				var error = function(response){
-					console.log(response);
-				};
-				
-				
-				if($scope.isReset){
-					var data = {
-						id : $scope.ModalUser.id,
-					};
-					//console.log(data);return;
-					api.POST('reset_pass', data, success, error);
-				}else{
-					var data = {
-						id : $scope.ModalUser.id, 
-						user_type_id : $scope.ModalUser.user_type_id,
-						department_id : $scope.ModalUser.department_id,
-						username : $scope.ModalUser.username
-					};
-					data.action = "edit";
-					console.log(data);return;
-					api.POST('users', data, success, error);
-				}
-				
-				
-			}
-			
-		};
+		$scope.filterLevel = function(department_id){
+			getYearLevels(department_id);
+		}
 		
-		$scope.cancelModal = function(){
-			$uibModalInstance.dismiss();
-		};
-		
-		$scope.deleteModal = function(){
-			$scope.deleting = true;
+		$scope.save = function(){
 			var success = function(response){
-				$uibModalInstance.close($scope.ModalUser.department_id);
+				$('#Modal').modal('hide');
+				console.log($scope.Mode);
+				console.log($scope.ModalData.department);
+				$scope.ActiveDepartment.id = $scope.ModalData.department.id;
+				getUsersByActiveDepartment()();
 			};
 			var error = function(response){
-				
+				console.log(response);
 			};
-			var data = {
-					id : $scope.ModalUser.id, 
-					username : $scope.ModalUser.username,
-					status : 'ARCVD'
+			
+			
+			
+			
+			
+			
+			
+			if($scope.isReset){
+				var data = {
+					id : $scope.ModalData.id,
 				};
+				api.POST('reset_pass', data, success, error);
+			}else{
+				var data = {
+					id : $scope.ModalData.id,
+					username : $scope.ModalData.username,
+					password : $scope.ModalData.password,
+					status : $scope.ModalData.active_status.id
+				};
+				//data.action = "edit";
 				//console.log(data);return;
-			api.POST('users', data, success, error);
-		};
-	
-		$scope.reset = function(){
-			$scope.isReset = true;
+				api.POST('users', data, success, error);
+			}
+			
 		}
+		
+
+
 	}]);
+	
 });

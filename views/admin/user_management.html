@@ -1,43 +1,64 @@
 <div class="row" ng-controller="UserManagementController" ng-init="init()">
+
 	<button class="btn btn-primary btn-fab top right fixed" ng-click="OpenModal()">
 		<span class="glyphicon glyphicon-plus"></span>
 	</button>
-	<script type="text/ng-template" id="UserManagementModalContent.html">
-		<div class="modal-header">
-			<h3 class="modal-title">User</h3>
-		</div>
-		<div class="modal-body">
-			<div class="row">
-				<div class="col-md-12">
-					<div class="form-group">
-						<label>Username</label>
-						<input ng-disabled="isReset" class="form-control" ng-model="ModalUser.username"/>
+	<!-- Modal -->
+	<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">Student Information</h3>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6">
+							<label>Username</label>
+							<input ng-disabled="isReset" class="form-control" ng-model="ModalData.username"/>
+						</div>
+						<div class="col-md-6">
+							<label>Status</label>
+							<select ng-disabled="isReset" class="form-control" ng-model="ModalData.active_status"
+														 ng-options="status.name for status in Statuses track by status.id">
+								<option value="">--Select--</option>
+							</select>
+						</div>
+					</div><br/>
+					<div class="row">
+						<div class="col-md-6">
+							<label>Password</label>
+							<input  ng-disabled="isReset" class="form-control" ng-model="ModalData.password"/>
+						</div>
+						<div class="col-md-6" ng-if="Mode=='edit'">
+							<label>&nbsp;</label>
+							<button ng-click="reset()" class="btn btn-default btn-block">Reset</button>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row" ng-if="Mode=='edit'">
-				<div class="col-md-12 text-right">
-					<button ng-click="reset()" class="btn btn-default">Reset</button>
-				</div>
-			</div>
-			<div class="row ">
-				<div class="col-md-12">
-					<label>Password</label>
-					<input ng-disabled="Mode=='edit'" class="form-control" ng-model="ModalUser.password"/>
+				<div class="modal-footer">
+					<button class="btn btn-default pull-left" ng-click="cancelModal()">Cancel</button>
+					<button class="btn btn-primary" ng-click="save()">
+						<span ng-if="!isReset">Save</span>
+						<span ng-if="isReset">Reset Password</span>
+					</button>
 				</div>
 			</div>
 		</div>
-		<div class="modal-footer">
-			<button class="btn btn-default pull-left" ng-click="cancelModal()">Cancel</button>
-			<button class="btn btn-danger pull-left" ng-click="deleteModal()" ng-show="Mode==='edit'&&!deleting">Archieve</button>
-			<button class="btn btn-primary" ng-click="confirmModal()" ng-show="idle">
-				<span ng-if="!isReset">Confirm</span>
-				<span ng-if="isReset">Reset Password</span>
-			</button>
-			<button class="btn btn-primary" ng-disabled="!idle" ng-show="!idle">Saving...</button>
-			<button class="btn btn-danger pull-left" ng-disabled="deleting" ng-show="deleting">Archieving...</button>
-		</div>
-	</script>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	<div class="col-md-12">
 		<div class="list-group">
 			<div class="list-group-item list-group-header">
@@ -95,12 +116,19 @@
 						<thead ng-show="Users.length">
 							<tr>
 								<th>Username</th>
+								<th>Status</th>
+								<th>ACtion</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr ng-repeat="User in Users"
-								ng-click="OpenModal(User,'edit')">
+							<tr ng-repeat="User in Users">
 								<td>{{User.username}}</td>
+								<td>{{User.status}}</td>
+								<td ng-click="OpenModal(User,'edit')" class="text-center" ng-click="OpenModal(Student,'edit')">
+									<a href="javascript:void(0)" >
+										<i class="glyphicon glyphicon-edit"></i>
+									</a>
+								</td>
 							</tr>
 						</tbody>
 					</table>
