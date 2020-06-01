@@ -4,9 +4,9 @@ class UsersController extends AppController {
 	var $name = 'Users';
 
 	function index() {
-		$this->User->recursive = 0;
+		$this->User->recursive = 1;
+		//$users = $this->User->find('all');
 		$users = $this->paginate();
-		
 		//pr($users);exit;
 		if($this->isAPIRequest()){
 			foreach($users as $i =>$user){
@@ -16,21 +16,19 @@ class UsersController extends AppController {
 						$status = array('id'=>'ACTIV','name'=>'Active');
 						break;
 					case 'ARCVD': 
-						$status = array('id'=>'ACTIV','name'=>'Archived');
+						$status = array('id'=>'ARCVD','name'=>'Archived');
 						break;
 				}
+				/* if(isset($user['UserType'])){
+					$user['User']['user_type']=$user['UserType']; 
+				} */
 				
 				$user['User']['active_status'] = $status;
-		
-				//pr($user['Student']);
+				unset($user['User']['password']);
 				$users[$i]=$user;
 			}
 		}
-		
-		
 		$this->set('users', $users);
-		
-		
 	}
 
 	function view($id = null) {
@@ -45,6 +43,9 @@ class UsersController extends AppController {
 		if (!empty($this->data)) {
 			$this->User->create();
 			if ($this->User->save($this->data)) {
+					pr('wew');exit;
+				$this->data['User']['id']=  $this->User->id;
+				$this->updateUser($this->data);
 				$this->Session->setFlash(__('The user has been saved', true));
 				$this->redirect(array('action' => 'index'));
 			} else {
@@ -115,7 +116,20 @@ class UsersController extends AppController {
 			}
 		}
 		$this->redirect(array('action'=>'index'));
-
 	}
 
+	protected function updateUser($data){
+		pr('wew');exit;
+		$studentId =  $data['User']['id'];
+		$userObj = $this->User->findById($studentId);
+		$student =  $userObj['Student'];
+		pr($student);	exit;
+		$student['status'] = $data['Student']['status'];		
+		$student['year_level_id'] = $data['YearLevel']['id'];	
+		unset($student['Department']);
+		unset($student['UserType']);
+		unset($student['Student']);
+		//pr($student);	exit;	
+		$this->User->Student->save($student);
+	}
 }
