@@ -80,6 +80,18 @@ class Student extends AppModel {
 					unset($cond[$search]);
 					$cond['Student.id']=$student_ids;
 				}
+				
+				$search3 = 'Student.user_id';
+				if(in_array($search3,$keys)){
+					$value = $cond[$search3];
+					$students = $this->find('list',array('conditions'=>array('Student.user_id'=>$value)));
+					//pr($students);
+					$student_ids = array_keys($students);
+					unset($cond[$search3]);
+					unset($cond[$search2]);
+					unset($cond[$search]);
+					$cond['Student.id']=$student_ids;
+				}
 
 				$conds[$i]=$cond;
 			}

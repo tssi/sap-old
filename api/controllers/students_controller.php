@@ -47,9 +47,12 @@ class StudentsController extends AppController {
 	function add() {
 		if (!empty($this->data)) {
 			$this->Student->create();
+			
 			if ($this->Student->save($this->data)) {
-				$this->data['Student']['id']=  $this->Student->id;
-				$this->updateUser($this->data);
+				if($this->data['Student']['user_id']){
+					$this->data['Student']['id']=  $this->Student->id;
+					$this->updateUser($this->data);
+				}
 				$this->Session->setFlash(__('The teacher has been saved', true));
 				$this->redirect(array('action' => 'index'));
 			} else {
