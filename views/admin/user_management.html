@@ -1,6 +1,6 @@
 <div class="row" ng-controller="UserManagementController" ng-init="init()">
 
-	<button class="btn btn-primary btn-fab top right fixed" ng-click="OpenModal()">
+	<button class="btn btn-primary btn-fab top right fixed" ng-click="openModal()">
 		<span class="glyphicon glyphicon-plus"></span>
 	</button>
 	<!-- Modal -->
@@ -14,12 +14,12 @@
 					<div class="row">
 						<div class="col-md-6">
 							<label>Username</label>
-							<input ng-disabled="isReset" class="form-control" ng-model="ModalData.username"/>
+							<input ng-disabled="isReset" class="form-control" ng-model="data.username"/>
 						</div>
 						<div class="col-md-6">
 							<label>Status</label>
-							<select ng-disabled="isReset" class="form-control" ng-model="ModalData.active_status"
-														 ng-options="status.name for status in Statuses track by status.id">
+							<select ng-disabled="isReset" class="form-control" ng-model="data.status"
+														 ng-options="status.id as status.name for status in Statuses">
 								<option value="">--Select--</option>
 							</select>
 						</div>
@@ -27,14 +27,14 @@
 					<div class="row">
 						<div class="col-md-6">
 							<label>User Type</label>
-							<select ng-disabled="isReset" class="form-control" ng-model="ModalData.user_type_id"
+							<select ng-disabled="isReset" class="form-control" ng-model="data.user_type_id"
 															 ng-options="userType.id as userType.name for userType in UserTypes | orderBy:'id' ">
 								<option value="">--Select User Type--</option>
 							</select>
 						</div>
 						<div class="col-md-6">
 							<label>Department</label>
-							<select ng-disabled="isReset" class="form-control" ng-model="ModalData.department_id"
+							<select ng-disabled="isReset" class="form-control" ng-model="data.department_id"
 															 ng-options="department.id as department.description for department in Departments | orderBy:'id' ">
 								<option value="">--Select Department--</option>
 							</select>
@@ -43,7 +43,7 @@
 					<div class="row">
 						<div class="col-md-6">
 							<label>Password</label>
-							<input  ng-disabled="isReset" class="form-control" ng-model="ModalData.password"/>
+							<input type="password" ng-disabled="isReset" class="form-control" ng-model="data.password"/>
 						</div>
 						<div class="col-md-6" ng-if="Mode=='edit'">
 							<label>&nbsp;</label>
@@ -53,10 +53,15 @@
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-default pull-left" ng-click="cancelModal()">Cancel</button>
-					<button class="btn btn-primary" ng-click="save()">
-						<span ng-if="!isReset">Save</span>
-						<span ng-if="isReset">Reset Password</span>
-					</button>
+					<button ng-if="!isReset" 
+						ng-disabled="
+						!data.username
+						|| !data.username
+						|| !data.status
+						|| !data.user_type_id
+						|| !data.department_id"
+						class="btn btn-primary" ng-click="save()">Save</button>
+					<button ng-if="isReset" class="btn btn-primary" ng-click="save()">Reset Password</button>
 				</div>
 			</div>
 		</div>
@@ -126,7 +131,7 @@
 							<tr ng-repeat="User in Users">
 								<td>{{User.username}}</td>
 								<td>{{User.status}}</td>
-								<td ng-click="OpenModal(User,'edit')" class="text-center" ng-click="OpenModal(Student,'edit')">
+								<td ng-click="openModal(User,'edit')" class="text-center">
 									<a href="javascript:void(0)" >
 										<i class="glyphicon glyphicon-edit"></i>
 									</a>

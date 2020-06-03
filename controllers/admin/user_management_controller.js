@@ -196,29 +196,28 @@ define(['app','api'],function(app){
 			$scope.ActivePage = page;
 			getUsersByActiveDepartment();
 		};
-
-		$scope.OpenModal = function (data,mode){
+		//MODAL
+		$scope.openModal = function (data,mode){
 			$('#Modal').modal('show');
-			$scope.ModalData = [];
+			$scope.data = {};
 			$scope.isReset = false;
 			
-			$scope.reset = function(){
-				$scope.isReset = true;
-			}
-			
 			if(mode == "edit"){
-				console.log(data);
-				$scope.ModalData = data;
 				$scope.Mode = mode;
+				$scope.data = angular.copy(data);
 			}else{
 				$scope.Mode = 'add';
 			}
 		}
 		
-		$scope.cancelModal = function (data,mode){
+		$scope.cancelModal = function (){
 			$('#Modal').modal('hide');
 		}
-			
+		
+		$scope.reset = function(){
+			$scope.isReset = true;
+		}
+		
 		$scope.save = function(){
 			var success = function(response){
 				$('#Modal').modal('hide');
@@ -231,22 +230,11 @@ define(['app','api'],function(app){
 			};
 			
 			if($scope.isReset){
-				var data = {
-					id : $scope.ModalData.id,
-				};
-				api.POST('reset_pass', data, success, error);
+				api.POST('reset_pass', $scope.data, success, error);
 			}else{
-				var data = {
-					id : $scope.ModalData.id,
-					username : $scope.ModalData.username,
-					password : $scope.ModalData.password,
-					department_id : $scope.ModalData.department_id,
-					user_type_id : $scope.ModalData.user_type_id,
-					status : $scope.ModalData.active_status.id
-				};
-			
-				api.POST('users', data, success, error);
+				api.POST('users',$scope.data, success, error);
 			}
 		}
+		//END MODAL 
 	}]);
 });

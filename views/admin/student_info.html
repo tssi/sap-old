@@ -1,5 +1,5 @@
 <div class="row" ng-controller="StudentController" ng-init="init()">
-	<button class="btn btn-primary btn-fab top right fixed" ng-click="OpenModal()">
+	<button class="btn btn-primary btn-fab top right fixed" ng-click="openModal()">
 		<span class="glyphicon glyphicon-plus"></span>
 	</button>
 	<!-- Modal -->
@@ -43,7 +43,7 @@
 							<label>Department</label>
 							<select class="form-control" ng-model="data.department_id"
 														 ng-options="dept.id as dept.name for dept in Departments"
-														 ng-change="filterLevel(data.department_id)">
+														 ng-change="filterYearLevel(data.department_id)">
 								<option value="">--Select--</option>
 							</select>
 						</div>
@@ -160,7 +160,7 @@
 									{{Student.last_name | uppercase}}
 									{{Student.suffix | uppercase}}</td>
 								<td>{{Student.year_level_id}}</td>
-								<td class="text-center" ng-click="OpenModal(Student,'edit')">
+								<td class="text-center" ng-click="openModal(Student,'edit')">
 									<a href="javascript:void(0)" >
 										<i class="glyphicon glyphicon-edit"></i>
 									</a>

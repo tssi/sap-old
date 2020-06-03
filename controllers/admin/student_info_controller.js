@@ -220,13 +220,12 @@ define(['app','api'],function(app){
 		};
 		
 		//MODAL
-		$scope.OpenModal = function (data,mode){
+		$scope.openModal = function (data,mode){
 			$('#Modal').modal('show');
 			$scope.data = {};
 			if(mode == "edit"){
-				console.log(data);
 				$scope.Mode = mode;
-				$scope.data = data;
+				$scope.data = angular.copy(data);
 			}else{
 				$scope.Mode = "add";
 			}
@@ -236,7 +235,7 @@ define(['app','api'],function(app){
 			$('#Modal').modal('hide');
 		}
 		
-		$scope.filterLevel = function(department_id){
+		$scope.filterYearLevel = function(department_id){
 			getYearLevels(department_id);
 		}
 		
@@ -257,5 +256,6 @@ define(['app','api'],function(app){
 			}
 			api.POST('students', $scope.data, success, error);
 		}
+		//END MODAL
 	}]); 
 });
