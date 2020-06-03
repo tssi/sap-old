@@ -235,15 +235,6 @@ define(['app','api'],function(app){
 		
 		$scope.cancelModal = function (data,mode){
 			$('#Modal').modal('hide');
-			$scope.Mode = "edit"
-			$scope.ActiveDepartment.id = "SH";
-			console.log($scope.Mode);
-			console.log($scope.ActiveDepartment.id);
-			
-			$('#Modal').modal('hide');
-			
-			$scope.CallBack = 1;
-			getStudentsByActiveDepartment();
 		}
 		
 		$scope.filterLevel = function(department_id){

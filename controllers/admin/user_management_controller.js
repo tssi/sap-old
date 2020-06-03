@@ -220,13 +220,13 @@ define(['app','api'],function(app){
 			
 		$scope.save = function(){
 			var success = function(response){
-				//$('#Modal').modal('hide');
+				$('#Modal').modal('hide');
 				//console.log('232');
 				//console.log($scope.Mode);
 				//console.log($scope.ActiveDepartment.id);
-				//$scope.CallBack = 1;
-				//$scope.ActiveStatus = '';
-				//getUsersByActiveDepartment();
+				$scope.CallBack = 1;
+				$scope.ActiveStatus = '';
+				getUsersByActiveDepartment();
 			};
 			var error = function(response){
 				console.log(response);

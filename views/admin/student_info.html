@@ -146,7 +146,10 @@
 						<tbody>
 							<tr ng-repeat="Student in Students">
 								<td>{{Student.lrn}}</td>
-								<td>{{Student.first_name}} {{Student.middle_name}} {{Student.last_name}} {{Student.suffix}}</td>
+								<td>{{Student.first_name | uppercase}}
+									{{Student.middle_name | uppercase}}
+									{{Student.last_name | uppercase}}
+									{{Student.suffix | uppercase}}</td>
 								<td>{{Student.year_level_id}}</td>
 								<td class="text-center" ng-click="OpenModal(Student,'edit')">
 									<a href="javascript:void(0)" >
