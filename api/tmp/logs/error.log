@@ -620,3 +620,4 @@
 2020-06-01 20:00:10 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at C:\cake\libs\debugger.php:686) in [C:\wamp\www\sap\api\plugins\api\api_app_controller.php, line 42]
 2020-06-01 20:00:10 Warning: Warning (2): Invalid argument supplied for foreach() in [C:\wamp\www\sap\api\plugins\api\api_app_controller.php, line 74]
 2020-06-01 20:00:10 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at C:\cake\libs\debugger.php:686) in [C:\cake\libs\controller\controller.php, line 742]
+2020-06-03 22:51:26 Warning: Warning (512): <span style="color:Red;text-align:left"><b>SQL Error:</b> 1054: Unknown column 'Student.full_name' in 'where clause'</span> in [C:\cake\libs\model\datasources\dbo_source.php, line 685]
