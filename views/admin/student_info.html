@@ -13,26 +13,26 @@
 					<div class="row">
 						<div class="col-md-4">
 							<label>First Name</label>
-							<input class="form-control" ng-model="ModalData.first_name"/>
+							<input class="form-control" ng-model="data.first_name"/>
 						</div>
 						<div class="col-md-4">
 							<label>Middle Name</label>
-							<input class="form-control" ng-model="ModalData.middle_name"/>
+							<input class="form-control" ng-model="data.middle_name"/>
 						</div>
 						<div class="col-md-4">
 							<label>Last Name</label>
-							<input class="form-control" ng-model="ModalData.last_name"/>			
+							<input class="form-control" ng-model="data.last_name"/>			
 						</div>
 					</div><br/>
 					<div class="row">
 					
 						<div class="col-md-4">
 							<label>Suffix</label>
-							<input class="form-control" placeholder="Jr / Sr / III" ng-model="ModalData.suffix"/>
+							<input class="form-control" placeholder="Jr / Sr / III" ng-model="data.suffix"/>
 						</div>
 						<div class="col-md-4">
 							<label>Gender</label>
-							<select class="form-control" ng-model="ModalData.gender">
+							<select class="form-control" ng-model="data.gender">
 								<option value="">--Select--</option>
 								<option value="M">Male</option>
 								<option value="F">Female</option>
@@ -41,9 +41,9 @@
 						
 						<div class="col-md-4">
 							<label>Department</label>
-							<select class="form-control" ng-model="ModalData.department"
-														 ng-options="Department.name for Department in Departments track by Department.id"
-														 ng-change="filterLevel(ModalData.department.id)">
+							<select class="form-control" ng-model="data.department_id"
+														 ng-options="dept.id as dept.name for dept in Departments"
+														 ng-change="filterLevel(data.department_id)">
 								<option value="">--Select--</option>
 							</select>
 						</div>
@@ -51,15 +51,15 @@
 					<div class="row">
 						<div class="col-md-4">
 							<label>Year Level</label>
-							<select class="form-control" ng-model="ModalData.year_level"
-														 ng-options="level.name for level in YearLevels track by level.id">
+							<select class="form-control" ng-model="data.year_level_id"
+														 ng-options="level.id as level.name for level in YearLevels">
 								<option value="">--Select--</option>
 							</select>
 						</div>
 						<div class="col-md-4">
 							<label>User</label>
 							<div class="form-group">
-								<select class="form-control" ng-model="ModalData.user_id"
+								<select class="form-control" ng-model="data.user_id"
 															 ng-options="user.id as user.username for user in Users | orderBy:'username' ">
 									<option value="">--Select--</option>
 								</select>
@@ -67,16 +67,25 @@
 						</div>
 						<div class="col-md-4">
 							<label>Status</label>
-							<select class="form-control" ng-model="ModalData.status"
-														 ng-options="status.name for status in Statuses track by status.id">
+							<select class="form-control" ng-model="data.status"
+														 ng-options="status.id as status.name for status in Statuses">
 								<option value="">--Select--</option>
 							</select>
 						</div>
 					</div>
 				</div>
-				<div class="modal-footer">
+				<div class="modal-footer">{{data.length}}
 					<button class="btn btn-default pull-left" ng-click="cancelModal()">Cancel</button>
-					<button class="btn btn-primary" ng-click="save()">Save</button>
+					<button 
+						ng-disabled="
+						!data.first_name
+						|| !data.last_name
+						|| !data.gender
+						|| !data.department_id
+						|| !data.year_level_id
+						|| !data.user_id
+						|| !data.status"
+						class="btn btn-primary" ng-click="save()">Save</button>
 				</div>
 			</div>
 		</div>

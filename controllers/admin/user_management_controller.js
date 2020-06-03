@@ -207,6 +207,7 @@ define(['app','api'],function(app){
 			}
 			
 			if(mode == "edit"){
+				console.log(data);
 				$scope.ModalData = data;
 				$scope.Mode = mode;
 			}else{
@@ -221,9 +222,6 @@ define(['app','api'],function(app){
 		$scope.save = function(){
 			var success = function(response){
 				$('#Modal').modal('hide');
-				//console.log('232');
-				//console.log($scope.Mode);
-				//console.log($scope.ActiveDepartment.id);
 				$scope.CallBack = 1;
 				$scope.ActiveStatus = '';
 				getUsersByActiveDepartment();

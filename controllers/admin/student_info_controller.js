@@ -69,6 +69,8 @@ define(['app','api'],function(app){
 				};
 				
 				if ($scope.CallBack === 1){
+					
+					console.log($scope.Mode);
 					if ($scope.Mode === "edit"){
 						if ($scope.TotalItems - (($scope.ActivePage - 1) * 10) === 0){
 							$scope.ActivePage--;
@@ -96,6 +98,7 @@ define(['app','api'],function(app){
 			};
 			api.GET('students', data, success, error);
 		};
+		
 		function getStudentsByActiveYearLevel(){
 			var data = {
 				department_id: $scope.ActiveDepartment.id,
@@ -122,6 +125,7 @@ define(['app','api'],function(app){
 			};
 			api.GET('students', data, success, error);
 		};
+		
 		function getUsers(){
 			var success = function(response){
 				$scope.Users = response.data;
@@ -215,19 +219,14 @@ define(['app','api'],function(app){
 			getStudentsByActiveDepartment();
 		};
 		
-		
+		//MODAL
 		$scope.OpenModal = function (data,mode){
 			$('#Modal').modal('show');
-			$scope.ModalData = [];
-			
+			$scope.data = {};
 			if(mode == "edit"){
 				console.log(data);
 				$scope.Mode = mode;
-				$scope.ModalData = data;
-				$scope.Statuses.map(function(item){
-					if(item.id === $scope.ModalData.status)
-						$scope.ModalData.status = item;
-				});
+				$scope.data = data;
 			}else{
 				$scope.Mode = "add";
 			}
@@ -243,8 +242,6 @@ define(['app','api'],function(app){
 		
 		$scope.save = function(){
 			var success = function(response){
-				//console.log($scope.Mode);
-				//console.log($scope.ActiveDepartment.id);
 				$('#Modal').modal('hide');
 				$scope.CallBack = 1;
 				$scope.ActiveStatus = '';
@@ -253,28 +250,12 @@ define(['app','api'],function(app){
 			var error = function(response){
 				console.log(response);
 			};
-			var data = $scope.ModalData;
-			
-			var data = {
-				id : $scope.ModalData.id, 
-				user_id : $scope.ModalData.user_id,
-				status : $scope.ModalData.status.id,
-				department_id : $scope.ModalData.department.id,
-				year_level_id : $scope.ModalData.year_level.id,
-				first_name : $scope.ModalData.first_name,
-				last_name : $scope.ModalData.last_name,
-				middle_name : $scope.ModalData.middle_name,
-				suffix : $scope.ModalData.suffix,
-				gender : $scope.ModalData.gender,
-				
-			};
-			if(!$scope.ModalData.id){
-				data.lrn = "";
-				data.sno = "";
+			if(!$scope.data.id){
+				$scope.data.lrn = "";
+				$scope.data.sno = "";
+				$scope.data.suffix = "";
 			}
-			api.POST('students', data, success, error);
-			
+			api.POST('students', $scope.data, success, error);
 		}
-		
 	}]); 
 });
