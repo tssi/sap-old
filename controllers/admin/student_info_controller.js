@@ -7,8 +7,7 @@ define(['app','api'],function(app){
 				getDepartments();
 				$scope.ActiveDepartment = {
 					"id": "SH",
-				};
-				
+				};			
 				getYearLevels($scope.ActiveDepartment.id);
 				
 				$scope.Statuses = [
@@ -26,8 +25,6 @@ define(['app','api'],function(app){
 			$scope.IsLoading = true;
 			$scope.NoRecords = false;
 		};
-		
-		
 		
 		function getDepartments(){
 			var success = function(response){
@@ -57,6 +54,7 @@ define(['app','api'],function(app){
 		
 		function getStudentsByActiveDepartment(){
 			var success = function(response){
+				console.log($scope.ActiveDepartment.id);
 				$scope.Students = response.data;
 				$scope.NextPage = response.meta.next;
 				$scope.PrevPage = response.meta.prev;
@@ -69,8 +67,7 @@ define(['app','api'],function(app){
 				};
 				
 				if ($scope.CallBack === 1){
-					
-					console.log($scope.Mode);
+					//console.log($scope.Mode);
 					if ($scope.Mode === "edit"){
 						if ($scope.TotalItems - (($scope.ActivePage - 1) * 10) === 0){
 							$scope.ActivePage--;
@@ -230,6 +227,7 @@ define(['app','api'],function(app){
 				$scope.Mode = "add";
 			}
 		}
+
 		
 		$scope.cancelModal = function (data,mode){
 			$('#Modal').modal('hide');
@@ -239,8 +237,11 @@ define(['app','api'],function(app){
 			getYearLevels(department_id);
 		}
 		
-		$scope.save = function(){
+		$scope.saveModal = function(){
 			var success = function(response){
+				//This will set Active Department on Save
+				$scope.Departments.map(function(item){if(item.id === response.data.department_id)$scope.ActiveDepartment = item;});
+				//END
 				$('#Modal').modal('hide');
 				$scope.CallBack = 1;
 				$scope.ActiveStatus = '';

@@ -115,20 +115,6 @@ define(['app','api'],function(app){
 		
 		};
 		
-		function getUsers(){
-			var success = function(response){
-				$scope.Users = response.data;
-				console.log($scope.Users);
-			};
-			var error = function(response){
-				
-			};
-			var data = {
-				limit: 10	
-			};
-			api.GET('users',data,success,error);
-		};
-		
 		$scope.SearchUser = function(){
 			$scope.Users = '';
 			$scope.IsLoading = 1;
@@ -167,7 +153,6 @@ define(['app','api'],function(app){
 			$scope.ActiveDepartment = dept;
 			$scope.ActivePage = 1;
 			$scope.ActiveStatus = null;
-			console.log($scope.ActiveStatus);
 			getUsersByActiveDepartment();
 			$scope.SearchFilters = {
 				page:$scope.ActivePage,
@@ -218,8 +203,11 @@ define(['app','api'],function(app){
 			$scope.isReset = true;
 		}
 		
-		$scope.save = function(){
+		$scope.saveModal = function(){
 			var success = function(response){
+				//This will set Active Department on Save
+				$scope.Departments.map(function(item){if(item.id === response.data.department_id)$scope.ActiveDepartment = item;});
+				//END
 				$('#Modal').modal('hide');
 				$scope.CallBack = 1;
 				$scope.ActiveStatus = '';

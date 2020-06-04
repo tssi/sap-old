@@ -85,7 +85,7 @@
 						|| !data.year_level_id
 						|| !data.user_id
 						|| !data.status"
-						class="btn btn-primary" ng-click="save()">Save</button>
+						class="btn btn-primary" ng-click="saveModal()">Save</button>
 				</div>
 			</div>
 		</div>
@@ -110,7 +110,8 @@
 			<div class="list-group-canvas">
 				<div class="list-group-item list-group-header">
 					<ul class="nav nav-pills">
-						<li ng-repeat="Department in Departments"
+						<li 
+							ng-repeat="Department in Departments"
 							ng-click="setActiveDepartment(Department)"
 							ng-class="{active:ActiveDepartment.id===(Department.id)}">
 							<a>{{Department.id}}</a>
