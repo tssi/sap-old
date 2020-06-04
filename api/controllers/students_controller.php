@@ -92,4 +92,6 @@ class StudentsController extends AppController {
 		//pr($user);	exit;	
 		$this->Student->User->save($user);
 	}
+
+	
 }
