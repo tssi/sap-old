@@ -22,9 +22,6 @@
 /**
  * Use the DS to separate the directories in other defines
  */
-	date_default_timezone_set("Asia/Manila");
-	error_reporting(E_ALL ^ E_WARNING);
-	ini_set("allow_url_fopen", true);
 	if (!defined('DS')) {
 		define('DS', DIRECTORY_SEPARATOR);
 	}
@@ -53,7 +50,7 @@
  *
  */
 	if (!defined('CAKE_CORE_INCLUDE_PATH')) {
-		define('CAKE_CORE_INCLUDE_PATH', 'C:');
+		define('CAKE_CORE_INCLUDE_PATH',  dirname(dirname(__FILE__)));
 	}
 
 /**
@@ -67,6 +64,7 @@
 	if (!defined('WWW_ROOT')) {
 		define('WWW_ROOT', dirname(__FILE__) . DS);
 	}
+	//print_r(CAKE_CORE_INCLUDE_PATH . PATH_SEPARATOR . ROOT . DS . APP_DIR . DS . PATH_SEPARATOR . ini_get('include_path'));exit;
 	if (!defined('CORE_PATH')) {
 		if (function_exists('ini_set') && ini_set('include_path', CAKE_CORE_INCLUDE_PATH . PATH_SEPARATOR . ROOT . DS . APP_DIR . DS . PATH_SEPARATOR . ini_get('include_path'))) {
 			define('APP_PATH', null);

@@ -391,3 +391,8 @@
 2020-06-03 19:05:02 Debug: Notice (8): Undefined index: user_id in [C:\wamp\www\sap\api\controllers\students_controller.php, line 52]
 2020-06-03 19:05:03 Debug: Notice (8): Undefined index: user_id in [C:\wamp\www\sap\api\controllers\students_controller.php, line 52]
 2020-06-03 19:05:11 Debug: Notice (8): Undefined index: user_id in [C:\wamp\www\sap\api\controllers\students_controller.php, line 52]
+2020-06-06 20:32:06 Debug: Notice (8): Undefined index: ext in [C:\wamp\www\sap\api\plugins\api\controllers\components\api.php, line 11]
+2020-06-06 20:32:23 Debug: Notice (8): Undefined index: ext in [C:\wamp\www\sap\api\plugins\api\controllers\components\api.php, line 11]
+2020-06-06 20:32:30 Debug: Notice (8): Undefined index: ext in [C:\wamp\www\sap\api\plugins\api\controllers\components\api.php, line 11]
+2020-06-06 20:35:44 Debug: Notice (8): Undefined index: ext in [C:\wamp\www\sap\api\plugins\api\controllers\components\api.php, line 11]
+2020-06-06 21:00:54 Debug: Notice (8): Undefined variable: body in [C:\wamp\www\sap\api\views\elements\email\html\inquiry.ctp, line 1]
