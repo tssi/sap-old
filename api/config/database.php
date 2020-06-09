@@ -7,7 +7,7 @@ class DATABASE_CONFIG {
 		'host' => 'localhost',
 		'login' => 'root',
 		'password' => '',
-		'database' => 'sap_db_200525',
+		'database' => 'sap',
 		'prefix' => '',
 		'encoding' => 'utf8',
 	);
