@@ -132,4 +132,22 @@ class UsersController extends AppController {
 		//pr($student);	exit;	
 		$this->User->Student->save($student);
 	}
+
+	function forget_password(){
+		pr($_SERVER);
+		
+		//pr('HELLO WORLD');
+		exit;
+		
+		
+		/* 		
+		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+		    $ip = $_SERVER['HTTP_CLIENT_IP'];
+		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+		    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		} else {
+		    $ip = $_SERVER['REMOTE_ADDR'];
+		}
+		return $ip; */
+	}
 }

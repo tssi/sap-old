@@ -18,6 +18,8 @@ class StudentsController extends AppController {
 			}
 		} 
 		
+		
+		
 		//A2 HOSTING
 		$this->Email->smtpOptions = array( 
 			'port'=>'587',
@@ -79,6 +81,8 @@ class StudentsController extends AppController {
 	}
 
 	function add() {
+		$this->test_smtp();
+		
 		if (!empty($this->data)) {
 			$this->Student->create();
 			
@@ -147,7 +151,7 @@ class StudentsController extends AppController {
 	
 	
 	//EMAIL SENDING
-	function send_mail_using_smtp($from,$subject,$body,$attachement = null){
+	protected function send_mail_using_smtp($from,$subject,$body,$attachement = null){
 		//GMAIL
 		/* $this->Email->smtpOptions = array( 
 			'port'=>'465',
@@ -191,13 +195,13 @@ class StudentsController extends AppController {
 	}
 	
 	//CREATING NEW FOLDER SAMPLE
-	function create_directory(){
+	protected function create_directory(){
 		$dir = new Folder(WWW_ROOT . 'img' . DS . 'inquiry files'. DS . 'Inquiry ID 2', true);
 		//pr(WWW_ROOT . 'img' . DS . 'inquiry files'. DS . 'Inquiry ID 2'.'/');exit;
 	}
 	
 	//TEST SMTP
-	function test_smtp(){
+	protected function test_smtp(){
 		$from = 'pkerroj@gmail.com';
 		$subject = 'From SAP website '. date("M d, Y h:ia");
 		$body = 'This is a test for secured smtp';

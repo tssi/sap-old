@@ -396,3 +396,5 @@
 2020-06-06 20:32:30 Debug: Notice (8): Undefined index: ext in [C:\wamp\www\sap\api\plugins\api\controllers\components\api.php, line 11]
 2020-06-06 20:35:44 Debug: Notice (8): Undefined index: ext in [C:\wamp\www\sap\api\plugins\api\controllers\components\api.php, line 11]
 2020-06-06 21:00:54 Debug: Notice (8): Undefined variable: body in [C:\wamp\www\sap\api\views\elements\email\html\inquiry.ctp, line 1]
+2020-06-09 18:47:42 Debug: Notice (8): Undefined index: HTTP_CLIENT_IP in [C:\wamp\www\sap\api\controllers\users_controller.php, line 137]
+2020-06-09 18:47:56 Debug: Notice (8): Array to string conversion in [C:\wamp\www\sap\api\controllers\users_controller.php, line 137]
