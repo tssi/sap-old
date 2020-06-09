@@ -28,7 +28,10 @@
  * to use (in this case, /app/views/pages/home.ctp)...
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
-
+	Router::connect(
+			"/forget_password",
+			array("controller"=>'users',"action" => "forget_password","[method]" => "GET")
+		);
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */
@@ -37,3 +40,4 @@
 	//Custom API Routing
 	Configure::write('Api.MASTER_ROUTES','educ_levels|system_defaults|modules');
 	App::import('Vendor', 'Api.routes');
+
