@@ -29,8 +29,20 @@
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 	Router::connect(
-			"/forget_password",
-			array("controller"=>'users',"action" => "forget_password","[method]" => "GET")
+		"/check",
+		array("controller"=>'users',"action" => "check","[method]" => "GET")
+	);
+	Router::connect(
+			"/send_verification",
+			array("controller"=>'users',"action" => "send_verification","[method]" => "GET")
+		);
+	Router::connect(
+			"/email",
+			array("controller"=>'users',"action" => "email","[method]" => "GET")
+		);
+	Router::connect(
+			"/verify_token",
+			array("controller"=>'users',"action" => "verify_token","[method]" => "POST")
 		);
 /**
  * ...and connect the rest of 'Pages' controller's urls.

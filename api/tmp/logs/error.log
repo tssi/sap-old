@@ -622,3 +622,8 @@
 2020-06-01 20:00:10 Warning: Warning (2): Cannot modify header information - headers already sent by (output started at C:\cake\libs\debugger.php:686) in [C:\cake\libs\controller\controller.php, line 742]
 2020-06-03 22:51:26 Warning: Warning (512): <span style="color:Red;text-align:left"><b>SQL Error:</b> 1054: Unknown column 'Student.full_name' in 'where clause'</span> in [C:\cake\libs\model\datasources\dbo_source.php, line 685]
 2020-06-07 14:21:12 Warning: Warning (2): session_destroy() [<a href='http://php.net/function.session-destroy'>function.session-destroy</a>]: Session object destruction failed in [C:\wamp\www\sap\api\cake\libs\cake_session.php, line 458]
+2020-06-10 15:25:40 Warning: Warning (2): json_decode() expects parameter 1 to be string, array given in [C:\wamp\www\sap\api\controllers\users_controller.php, line 141]
+2020-06-10 16:32:58 Warning: Warning (2): Creating default object from empty value in [C:\wamp\www\sap\api\controllers\users_controller.php, line 183]
+2020-06-10 17:41:28 Warning: Warning (2): Missing argument 1 for UsersController::email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 181]
+2020-06-10 17:41:28 Warning: Warning (2): Missing argument 3 for UsersController::email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 181]
+2020-06-10 17:41:28 Warning: Warning (2): Missing argument 4 for UsersController::email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 181]

@@ -2,6 +2,7 @@
 class UsersController extends AppController {
 
 	var $name = 'Users';
+	var $components = array('Email');
 
 	function index() {
 		$this->User->recursive = 1;
@@ -133,21 +134,123 @@ class UsersController extends AppController {
 		$this->User->Student->save($student);
 	}
 
-	function forget_password(){
-		pr($_SERVER);
-		
-		//pr('HELLO WORLD');
-		exit;
-		
-		
-		/* 		
-		if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-		    $ip = $_SERVER['HTTP_CLIENT_IP'];
-		} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-		    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		} else {
-		    $ip = $_SERVER['REMOTE_ADDR'];
+	function check(){
+		if($this->data['User']['validation'] == "sno"){
+			$user = $this->User->findBySno($this->data['User']['sno']);
+			echo json_encode($user);
+			exit;
 		}
-		return $ip; */
+		
+		if($this->data['User']['validation'] == "email"){
+			$conditions =  array(
+				'User.sno'=>$this->data['User']['sno'],
+				'User.email'=>$this->data['User']['email']
+			);
+			$user = $this->User->find('first',array('conditions'=>$conditions));
+			echo json_encode($user);
+			exit;
+		}
+		
+	}
+	
+	
+	function send_verification(){
+		//GENERATE TOKEN
+		$token = openssl_random_pseudo_bytes(20);//Generate a random string.
+		$token = bin2hex($token);//Convert the binary data into hexadecimal representation.
+		$this->data['User']['reset_token'] = $token ;
+		//END
+		
+		//TOKEN EXPIRATION DATE
+		$now = date("Y-m-d H:i:s", strtotime("now"));
+		$expiration  = date("Y-m-d H:i:s", strtotime("+30 minutes"));
+		$this->data['User']['request_datetime'] = $now ;
+		$this->data['User']['reset_expiry'] = $expiration;
+		//END
+		
+		//GET THE IP OF THE USER TYRING TO RESET PASSWORD
+		if(!empty($_SERVER['HTTP_CLIENT_IP'])) {$this->data['User']['ip_forget'] = $_SERVER['HTTP_CLIENT_IP'];}
+		elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {$this->data['User']['ip_forget'] = $_SERVER['HTTP_X_FORWARDED_FOR'];}
+		else{$this->data['User']['ip_forget'] = $_SERVER['REMOTE_ADDR'];}
+		//END
+		
+		
+		//SAVE COMMAND
+		$this->User->save($this->data);//UPDATE USER ROW
+				
+		//EMAIL COMMAND
+		$from = 'SAP by The Simplified Solutions Inc. <sap@mytssi-erb.com>';
+		$to = trim($this->data['User']['email']);
+		$subject = 'SAP Verification'. date("M d, Y h:ia");
+		$body = 'Are you trying to sign in? Click on the verification link to approve your sign in request:  <a href="http://localhost/sap/#/user/change_password?token='.$token.'">http://localhost/sap/#/user/change_password?token='.$token.'</a>';
+		$this->email($from,$to,$subject,$body);
+		
+	}
+
+	function email($from,$to,$subject,$body,$attachement = null){
+		//$from ="SAP by The Simplified Solutions Inc. <sap@mytssi-erb.com>",
+		//$to="paulobiscocho@gmail.com",
+		//$subject= "SAP",
+		//$body="body",
+		//$attachement = null
+		
+		//A2 HOSTING
+		$this->Email->smtpOptions = array( 
+			'port'=>'587',
+			'timeout'=>'30',
+			'host' => 'mail.mytssi-erb.com',
+			'username'=>'sap@mytssi-erb.com',
+			'password'=>'tBKLVU1mDk85',
+			'client'=>'a2ss55.a2hosting.com'
+		);
+		
+		
+	    $this->Email->delivery = 'smtp'; //Set delivery method
+		$this->Email->to = $to;
+		$this->Email->bcc = array('sap@mytssi-erb.com');
+		$this->Email->from = $from;
+		$this->Email->replyTo = $from;
+		$this->Email->subject = $subject;
+		$this->Email->attachments = $attachement;
+		$this->Email->template = 'inquiry'; // note no '.ctp'
+		$this->Email->sendAs = 'both'; //Send as 'html', 'text' or 'both' (default is 'text')
+		$this->set('body',$body);
+		
+		//$this->Email->delivery = 'debug';
+		//Do not pass any args to send()
+		if($this->Email->send()){
+			$email_response = 'EMAIL SENT';
+			$is_sent = true;
+		}else{
+			$email_response ='FAILED SENDING EMAIL';
+			$is_sent = false;
+		}
+		
+		
+		/* Check for SMTP errors. */
+		$smtp_errors = $this->Email->smtpError;
+		$response = array();
+		$response['smtp_errors '] = $smtp_errors;
+		$response['email_response '] = $email_response;
+		$response['is_sent '] = $is_sent;
+		
+		echo json_encode($response);
+		exit;
+		//$this->set(compact('smtp_errors','email_response'));
+		
+	}
+
+	function verify_token(){
+		$data = $this->User->findByResetToken($this->data['User']['token']);
+	
+		if( date("Y-m-d H:i:s", strtotime("now")) <= $data['User']['reset_expiry']){
+			$data['User']['token_status'] = 1;
+			$data['User']['token_status_msg'] = 'Valid Token';
+		}else{
+			$data['User']['token_status'] = 0;
+			$data['User']['token_status_msg'] = 'Expired Token';
+		}
+		echo json_encode($data);
+		exit;
 	}
 }
