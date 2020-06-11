@@ -1,7 +1,7 @@
 define(['app','api'],function(app){
-	app.register.controller('ResetPasswordController',['$rootScope','$scope','api','$uibModal','$timeout',function($rootScope,$scope,api,$uibModal,$timeout){
+	app.register.controller('ChallengeController',['$rootScope','$scope','api','$uibModal','$timeout',function($rootScope,$scope,api,$uibModal,$timeout){
 		$scope.init = function(){
-			$rootScope.__MODULE_NAME = 'Reset Password';
+			$rootScope.__MODULE_NAME = 'Retrieve Account';
 			$scope.ValidSNo =  false;
 			$scope.EmailVerificationSent =  false;
 			$scope.data = {};
@@ -59,7 +59,7 @@ define(['app','api'],function(app){
 		
 		//REDIRECT TIMEOUT
 		$scope.onTimeout = function(){
-			if ($scope.counter > 0) {
+			if ($scope.counter > 1) {
 				$scope.counter--;
 				mytimeout = $timeout($scope.onTimeout,1000);
 			} else {
