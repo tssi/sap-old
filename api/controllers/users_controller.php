@@ -44,9 +44,10 @@ class UsersController extends AppController {
 		if (!empty($this->data)) {
 			$this->User->create();
 			if ($this->User->save($this->data)) {
-					pr('wew');exit;
-				$this->data['User']['id']=  $this->User->id;
-				$this->updateUser($this->data);
+				if($this->data['Student']['user_id']){
+					$this->data['User']['id']=  $this->User->id;
+					$this->updateUser($this->data);
+				}
 				$this->Session->setFlash(__('The user has been saved', true));
 				$this->redirect(array('action' => 'index'));
 			} else {
@@ -120,11 +121,11 @@ class UsersController extends AppController {
 	}
 
 	protected function updateUser($data){
-		pr('wew');exit;
+		//pr('wew');exit;
 		$studentId =  $data['User']['id'];
 		$userObj = $this->User->findById($studentId);
 		$student =  $userObj['Student'];
-		pr($student);	exit;
+		//pr($student);	exit;
 		$student['status'] = $data['Student']['status'];		
 		$student['year_level_id'] = $data['YearLevel']['id'];	
 		unset($student['Department']);
@@ -179,10 +180,10 @@ class UsersController extends AppController {
 		$this->User->save($this->data);//UPDATE USER ROW
 				
 		//EMAIL COMMAND
-		$from = 'SAP by The Simplified Solutions Inc. <sap@mytssi-erb.com>';
+		$from = 'SAP <sap@mytssi-erb.com>';
 		$to = trim($this->data['User']['email']);
-		$subject = 'SAP Verification'. date("M d, Y h:ia");
-		$body = 'Are you trying to sign in? Click on the verification link to approve your sign in request:  <a href="http://localhost/sap/#/user/change_password?token='.$token.'">http://localhost/sap/#/user/change_password?token='.$token.'</a>';
+		$subject = 'Verification';
+		$body = 'Are you trying to sign in? Click on the verification link to approve your sign in request:  <a href="http://localhost/sap/#/signin/change_password?token='.$token.'">http://localhost/sap/#/signin/change_password?token='.$token.'</a>';
 		$this->email($from,$to,$subject,$body);
 		
 	}
@@ -252,5 +253,15 @@ class UsersController extends AppController {
 		}
 		echo json_encode($data);
 		exit;
+	}
+	
+	function verify_email_account(){
+		//EMAIL COMMAND
+		$from = 'SAP <sap@mytssi-erb.com>';
+		$to = trim($this->data['User']['email']);
+		$subject = 'Account Verification';
+		$body = 'Please click  this link to activate your account:  <a href="http://localhost/sap/#/signin/verify_email_account?token='.$token.'">http://localhost/sap/#/signin/verify_email_account?token='.$token.'</a>';
+		$this->email($from,$to,$subject,$body);
+	
 	}
 }

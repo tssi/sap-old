@@ -3,7 +3,6 @@ define(['app','api'],function(app){
 		$scope.init = function(){
 			$rootScope.__MODULE_NAME = 'Change Password';
 			$scope.data={}
-			
 			$scope.data.token = window.location.href.split('=')[1];
 		
 			$scope.getToken();
@@ -30,12 +29,15 @@ define(['app','api'],function(app){
 			var success = function(response){
 				$scope.user = response.User;
 				console.log(response.User);
+				window.location.replace('http://localhost/sap/#/login');
 			}
 			var error  =function(response){
 				console.log(response);
 			}
-			$scope.data.id  = $scope.user.id
-			api.POST('change_password',$scope.data,success, error);
+			$scope.data.id  = $scope.user.id;
+			$scope.data.reset_token  = null;
+			$scope.data.reset_expiry  = null;
+			api.POST('users',$scope.data,success, error);
 			
 		}
 		
