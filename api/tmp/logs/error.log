@@ -627,3 +627,7 @@
 2020-06-10 17:41:28 Warning: Warning (2): Missing argument 1 for UsersController::email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 181]
 2020-06-10 17:41:28 Warning: Warning (2): Missing argument 3 for UsersController::email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 181]
 2020-06-10 17:41:28 Warning: Warning (2): Missing argument 4 for UsersController::email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 181]
+2020-06-11 19:37:15 Warning: Warning (2): Missing argument 1 for UsersController::test_email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 288]
+2020-06-11 19:37:15 Warning: Warning (2): Missing argument 2 for UsersController::test_email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 288]
+2020-06-11 19:37:15 Warning: Warning (2): Missing argument 3 for UsersController::test_email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 288]
+2020-06-11 19:37:15 Warning: Warning (2): Missing argument 4 for UsersController::test_email() in [C:\wamp\www\sap\api\controllers\users_controller.php, line 288]

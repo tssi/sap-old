@@ -418,3 +418,4 @@
 2020-06-11 03:02:35 Debug: Notice (8): Undefined variable: token in [C:\wamp\www\sap\api\controllers\users_controller.php, line 263]
 2020-06-11 03:04:58 Debug: Notice (8): Undefined variable: token in [C:\wamp\www\sap\api\controllers\users_controller.php, line 263]
 2020-06-11 03:05:52 Debug: Notice (8): Undefined variable: token in [C:\wamp\www\sap\api\controllers\users_controller.php, line 263]
+2020-06-11 14:15:56 Debug: Notice (8): Undefined variable: token in [C:\wamp\www\sap\api\controllers\users_controller.php, line 263]

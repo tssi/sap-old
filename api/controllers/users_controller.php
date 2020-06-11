@@ -135,6 +135,7 @@ class UsersController extends AppController {
 		$this->User->Student->save($student);
 	}
 
+	//SIGNIN CHALLENGE //REQUEST TO CHANGE PASSWORD
 	function check(){
 		if($this->data['User']['validation'] == "sno"){
 			$user = $this->User->findBySno($this->data['User']['sno']);
@@ -145,7 +146,8 @@ class UsersController extends AppController {
 		if($this->data['User']['validation'] == "email"){
 			$conditions =  array(
 				'User.sno'=>$this->data['User']['sno'],
-				'User.email'=>$this->data['User']['email']
+				'User.email'=>$this->data['User']['email'],
+				'User.is_activated'=>1,
 			);
 			$user = $this->User->find('first',array('conditions'=>$conditions));
 			echo json_encode($user);
@@ -153,9 +155,7 @@ class UsersController extends AppController {
 		}
 		
 	}
-	
-	
-	function send_verification(){
+	function recovery_request(){
 		//GENERATE TOKEN
 		$token = openssl_random_pseudo_bytes(20);//Generate a random string.
 		$token = bin2hex($token);//Convert the binary data into hexadecimal representation.
@@ -182,19 +182,64 @@ class UsersController extends AppController {
 		//EMAIL COMMAND
 		$from = 'SAP <sap@mytssi-erb.com>';
 		$to = trim($this->data['User']['email']);
-		$subject = 'Verification';
+		$subject = 'Your SAP Account Recovery Request';
 		$body = 'Are you trying to sign in? Click on the verification link to approve your sign in request:  <a href="http://localhost/sap/#/signin/change_password?token='.$token.'">http://localhost/sap/#/signin/change_password?token='.$token.'</a>';
 		$this->email($from,$to,$subject,$body);
 		
 	}
-
-	function email($from,$to,$subject,$body,$attachement = null){
-		//$from ="SAP by The Simplified Solutions Inc. <sap@mytssi-erb.com>",
-		//$to="paulobiscocho@gmail.com",
-		//$subject= "SAP",
-		//$body="body",
-		//$attachement = null
+	function verify_request(){
+		$data = $this->User->findByResetToken($this->data['User']['token']);
+	
+		if( date("Y-m-d H:i:s", strtotime("now")) <= $data['User']['reset_expiry']){
+			$data['User']['token_status'] = 1;
+			$data['User']['token_status_msg'] = 'Valid Token';
+		}else{
+			$data['User']['token_status'] = 0;
+			$data['User']['token_status_msg'] = 'Expired Token';
+		}
+		echo json_encode($data);
+		exit;
+	}
+	//END
+	
+	//REGISTER EMAIL & VERIFY EMAIL ACCOUNT //ONE TIME VERIFICATION
+	function email_registration(){
+		//GENERATE TOKEN
+		$token = openssl_random_pseudo_bytes(20);//Generate a random string.
+		$token = bin2hex($token);//Convert the binary data into hexadecimal representation.
+		$this->data['User']['reset_token'] = $token ;
+		//END
 		
+		//SAVE COMMAND
+		$this->User->save($this->data);//UPDATE USER ROW
+				
+		//EMAIL COMMAND
+		$from = 'SAP <sap@mytssi-erb.com>';
+		$to = trim($this->data['User']['email']);
+		$subject = 'SAP - Verify your Account';
+		$body = 'Please click  this link to activate your account:  <a href="http://localhost/sap/#/signin/activate_account?token='.$token.'">http://localhost/sap/#/signin/activate_account?token='.$token.'</a>';
+		$this->email($from,$to,$subject,$body);
+	}
+	function verify_account(){
+		$data = $this->User->findByResetToken($this->data['User']['token']);
+		//pr($data);exit;
+		if(!empty($data) && !$data['User']['is_activated']){
+			$data['User']['token_status'] = 1;
+			$data['User']['token_status_msg'] = 'Valid Token';
+			
+			//SAVE COMMAND
+			$data['User']['is_activated']=1;
+			$this->User->save($data);//UPDATE USER ROW
+		}else{
+			$data['User']['token_status'] = 0;
+			$data['User']['token_status_msg'] = 'Invalid Token';
+		}
+		echo json_encode($data);
+		exit;
+	}
+	//END
+
+	function email($from,$to,$subject,$body,$attachement = null){		
 		//A2 HOSTING
 		$this->Email->smtpOptions = array( 
 			'port'=>'587',
@@ -240,28 +285,56 @@ class UsersController extends AppController {
 		//$this->set(compact('smtp_errors','email_response'));
 		
 	}
-
-	function verify_token(){
-		$data = $this->User->findByResetToken($this->data['User']['token']);
 	
-		if( date("Y-m-d H:i:s", strtotime("now")) <= $data['User']['reset_expiry']){
-			$data['User']['token_status'] = 1;
-			$data['User']['token_status_msg'] = 'Valid Token';
+	function test_email(){
+		$from ="SAP by The Simplified Solutions Inc. <sap@mytssi-erb.com>";
+		$to="paulobiscocho@gmail.com";
+		$subject= "SAP";
+		$body="body";
+		$attachement = null;
+		
+		//A2 HOSTING
+		$this->Email->smtpOptions = array( 
+			'port'=>'587',
+			'timeout'=>'30',
+			'host' => 'mail.mytssi-erb.com',
+			'username'=>'sap@mytssi-erb.com',
+			'password'=>'tBKLVU1mDk85',
+			'client'=>'a2ss55.a2hosting.com'
+		);
+		
+		
+	    $this->Email->delivery = 'smtp'; //Set delivery method
+		$this->Email->to = $to;
+		$this->Email->bcc = array('sap@mytssi-erb.com');
+		$this->Email->from = $from;
+		$this->Email->replyTo = $from;
+		$this->Email->subject = $subject;
+		$this->Email->attachments = $attachement;
+		$this->Email->template = 'inquiry'; // note no '.ctp'
+		$this->Email->sendAs = 'html'; //Send as 'html', 'text' or 'both' (default is 'text')
+		$this->set('body',$body);
+		
+		$this->Email->delivery = 'debug';
+		//Do not pass any args to send()
+		if($this->Email->send()){
+			$email_response = 'EMAIL SENT';
+			$is_sent = true;
 		}else{
-			$data['User']['token_status'] = 0;
-			$data['User']['token_status_msg'] = 'Expired Token';
+			$email_response ='FAILED SENDING EMAIL';
+			$is_sent = false;
 		}
-		echo json_encode($data);
-		exit;
+		
+		
+		/* Check for SMTP errors. */
+		$smtp_errors = $this->Email->smtpError;
+		$response = array();
+		$response['smtp_errors '] = $smtp_errors;
+		$response['email_response '] = $email_response;
+		$response['is_sent '] = $is_sent;
+	
+		$this->set(compact('smtp_errors','email_response'));
+		
 	}
 	
-	function verify_email_account(){
-		//EMAIL COMMAND
-		$from = 'SAP <sap@mytssi-erb.com>';
-		$to = trim($this->data['User']['email']);
-		$subject = 'Account Verification';
-		$body = 'Please click  this link to activate your account:  <a href="http://localhost/sap/#/signin/verify_email_account?token='.$token.'">http://localhost/sap/#/signin/verify_email_account?token='.$token.'</a>';
-		$this->email($from,$to,$subject,$body);
-	
-	}
 }
