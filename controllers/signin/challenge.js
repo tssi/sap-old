@@ -24,7 +24,7 @@ define(['app','api'],function(app){
 			var error = function(response){console.log(response)}
 			
 			$scope.data.validation = 'sno';
-			api.POST('users/check',$scope.data,success, error);
+			api.POST('check',$scope.data,success, error);
 		}
 		
 		$scope.validateEmail = function (){
@@ -40,7 +40,7 @@ define(['app','api'],function(app){
 			}
 			var error  =function(response){}
 			$scope.data.validation = 'email';
-			api.POST('users/check',$scope.data,success, error);
+			api.POST('check',$scope.data,success, error);
 		}
 	
 		$scope.sendVerification = function(){
@@ -54,7 +54,7 @@ define(['app','api'],function(app){
 			
 			delete $scope.data.validation;
 			$scope.data.id = $scope.User.id;
-			api.POST('users/send_verification',$scope.data,success, error);
+			api.POST('recovery_request',$scope.data,success, error);
 		}
 		
 		//REDIRECT TIMEOUT
@@ -63,7 +63,7 @@ define(['app','api'],function(app){
 				$scope.counter--;
 				mytimeout = $timeout($scope.onTimeout,1000);
 			} else {
-				window.location.replace($scope.email_link);
+				window.open($scope.email_link);
 			}
 		}
 		

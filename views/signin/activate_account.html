@@ -1,0 +1,8 @@
+<div class="row" ng-controller="ActivateAccountController" ng-init="init()">
+	<div ng-if="user && user.token_status" class="col-md-4 col-md-offset-4">
+		<p>Account activation complete. This page will automatically redirect you in {{counter}} seconds.</p>
+	</div>
+	<div ng-if="user && !user.token_status" class="col-md-4 col-md-offset-4">
+		<p>Expired or Invalid Token. This page will automatically redirect you in {{counter}} seconds.</p>
+	</div>
+</div>

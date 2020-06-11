@@ -50,7 +50,7 @@
 		</div>
 	</div>
 	<div ng-if="EmailVerificationSent" class="col-md-4 col-md-offset-4">
-		<p>Verification Link sent to your email. Pls. check you email. This page will automatically redirect you in {{counter}} seconds.</p>
+		<p ng-if="counter!=1">Verification Link sent to your email. Pls. check you email. This page will automatically redirect you in {{counter}} seconds.</p>
 		
 		<p>If you want to go to your email now, <a target="_blank" href="{{email_link}}">click here</a>.</p>
 	</div>

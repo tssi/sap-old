@@ -4,20 +4,19 @@ define(['app','api'],function(app){
 			$rootScope.__MODULE_NAME = 'Change Password';
 			$scope.data={}
 			$scope.data.token = window.location.href.split('=')[1];
-		
 			$scope.getToken();
+			//console.log(BASE_URL+'#/login');
 		};
 		
 		$scope.getToken = function(){
 			var success = function(response){
 				$scope.user = response.User;
-				console.log(response.User);
+				//console.log(response.User);
 			}
 			var error  =function(response){
-				console.log(response);
+				//console.log(response);
 			}
-			
-			api.POST('verify_token',$scope.data,success, error);
+			api.POST('verify_request',$scope.data,success, error);
 		}
 		
 		$scope.changePassword = function(){
@@ -25,20 +24,18 @@ define(['app','api'],function(app){
 				alert('Mismatch password. Pls. re-type your password');
 				return;
 			}
-			
 			var success = function(response){
 				$scope.user = response.User;
-				console.log(response.User);
-				window.location.replace('http://localhost/sap/#/login');
+				//console.log(response.User);
+				window.location.replace(BASE_URL+'#/login');
 			}
 			var error  =function(response){
-				console.log(response);
+				//console.log(response);
 			}
 			$scope.data.id  = $scope.user.id;
 			$scope.data.reset_token  = null;
 			$scope.data.reset_expiry  = null;
 			api.POST('users',$scope.data,success, error);
-			
 		}
 		
 	}]);
