@@ -179,11 +179,15 @@ class UsersController extends AppController {
 		//SAVE COMMAND
 		$this->User->save($this->data);//UPDATE USER ROW
 				
+		//PREPARE SERVER NAME
+		if($_SERVER['SERVER_NAME'] == "localhost") $app = $_SERVER['REQUEST_SCHEME'].'://'. $_SERVER['SERVER_NAME'].'/sap';
+		else $app = $_SERVER['REQUEST_SCHEME'].'://'. $_SERVER['SERVER_NAME'];
+		
 		//EMAIL COMMAND
 		$from = 'SAP <sap@mytssi-erb.com>';
 		$to = trim($this->data['User']['email']);
 		$subject = 'Your SAP Account Recovery Request';
-		$body = 'Are you trying to sign in? Click on the verification link to approve your sign in request:  <a href="http://localhost/sap/#/signin/change_password?token='.$token.'">http://localhost/sap/#/signin/change_password?token='.$token.'</a>';
+		$body = 'Are you trying to sign in? Click on the verification link to approve your sign in request:  <a href="'.$app.'/#/signin/change_password?token='.$token.'">'.$app.'/#/signin/change_password?token='.$token.'</a>';
 		$this->email($from,$to,$subject,$body);
 		
 	}
@@ -213,11 +217,16 @@ class UsersController extends AppController {
 		//SAVE COMMAND
 		$this->User->save($this->data);//UPDATE USER ROW
 				
+		//PREPARE SERVER NAME
+		if($_SERVER['SERVER_NAME'] == "localhost") $app = $_SERVER['REQUEST_SCHEME'].'://'. $_SERVER['SERVER_NAME'].'/sap';
+		else $app = $_SERVER['REQUEST_SCHEME'].'://'. $_SERVER['SERVER_NAME'];
+		
 		//EMAIL COMMAND
 		$from = 'SAP <sap@mytssi-erb.com>';
 		$to = trim($this->data['User']['email']);
 		$subject = 'SAP - Verify your Account';
-		$body = 'Please click  this link to activate your account:  <a href="http://localhost/sap/#/signin/activate_account?token='.$token.'">http://localhost/sap/#/signin/activate_account?token='.$token.'</a>';
+		$body = 'Please click this link to activate your account: <a href="'.$app.'/#/signin/activate_account?token='.$token.'">'.$app.'/#/signin/activate_account?token='.$token.'</a>';
+
 		$this->email($from,$to,$subject,$body);
 	}
 	function verify_account(){
@@ -252,10 +261,10 @@ class UsersController extends AppController {
 		
 		
 	    $this->Email->delivery = 'smtp'; //Set delivery method
-		$this->Email->to = $to;
+		$this->Email->to = trim($to);
 		$this->Email->bcc = array('sap@mytssi-erb.com');
-		$this->Email->from = $from;
-		$this->Email->replyTo = $from;
+		$this->Email->from = trim($from);
+		$this->Email->replyTo = trim($from);
 		$this->Email->subject = $subject;
 		$this->Email->attachments = $attachement;
 		$this->Email->template = 'inquiry'; // note no '.ctp'
@@ -290,7 +299,19 @@ class UsersController extends AppController {
 		$from ="SAP by The Simplified Solutions Inc. <sap@mytssi-erb.com>";
 		$to="paulobiscocho@gmail.com";
 		$subject= "SAP";
-		$body="body";
+		$token = '123';
+	
+		if($_SERVER['SERVER_NAME'] == "localhost") $app = $_SERVER['REQUEST_SCHEME'].'://'. $_SERVER['SERVER_NAME'].'/sap';
+		else $app = $_SERVER['REQUEST_SCHEME'].'://'. $_SERVER['SERVER_NAME'];
+		
+		//SAMPLE EMAIL FOR ACCOUNT ACTIVATION 
+		//$body = 'Please click this link to activate your account: <a href="'.$app.'/#/signin/activate_account?token='.$token.'">'.$app.'/#/signin/activate_account?token='.$token.'</a>';
+		
+		//SAMPLE EMAIL FOR RECOVERY REQUEST
+		$body = 'Are you trying to sign in? Click on the verification link to approve your sign in request:  <a href="'.$app.'/#/signin/change_password?token='.$token.'">'.$app.'/#/signin/change_password?token='.$token.'</a>';
+		
+		
+		
 		$attachement = null;
 		
 		//A2 HOSTING
